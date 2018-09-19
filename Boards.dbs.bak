@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="Boards" id="Project_551cb65" template="Default" database="PostgreSQL" >
+	<schema name="boards" schemaname="boards" >
+		<table name=" profile" >
+			<column name="user_id" type="integer" jt="4" mandatory="y" />
+			<column name="phonenumber" type="integer" jt="4" />
+			<column name="receive_notifications" type="bool" jt="-7" mandatory="y" >
+				<defo>1</defo>
+			</column>
+			<index name="pk_ profile_user_id" unique="PRIMARY_KEY" >
+				<column name="user_id" />
+			</index>
+			<fk name="fk_ profile_user" to_schema="boards" to_table="user" >
+				<fk_column name="user_id" pk="id" />
+			</fk>
+		</table>
+		<table name="audit" >
+			<comment><![CDATA[events Audit]]></comment>
+			<column name="id" type="integer" jt="4" />
+			<column name="message" type="varchar" length="300" jt="12" />
+			<column name="created_date" type="date" jt="91" />
+		</table>
+		<table name="board" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="100" jt="12" />
+			<column name="filters" type="varchar" jt="12" />
+			<column name="type_id" type="integer" jt="4" />
+			<index name="idx_board_type_id" unique="NORMAL" >
+				<column name="type_id" />
+			</index>
+			<fk name="fk_board_collection" to_schema="boards" to_table="collection" />
+			<fk name="fk_board_board_type" to_schema="boards" to_table="board_type" >
+				<fk_column name="type_id" pk="id" />
+			</fk>
+		</table>
+		<table name="board_spec" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="board_id" type="integer" jt="4" />
+			<column name="card_id" type="integer" jt="4" />
+			<column name="priority" type="integer" jt="4" />
+			<index name="pk_board_spec_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_board_spec_board_id" unique="NORMAL" >
+				<column name="board_id" />
+			</index>
+			<index name="idx_board_spec_card_id" unique="NORMAL" >
+				<column name="card_id" />
+			</index>
+			<fk name="fk_board_spec_board" to_schema="boards" to_table="board" >
+				<fk_column name="board_id" pk="id" />
+			</fk>
+			<fk name="fk_board_spec_card" to_schema="boards" to_table="card" >
+				<fk_column name="card_id" pk="id" />
+			</fk>
+		</table>
+		<table name="board_type" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="100" jt="12" mandatory="y" />
+			<index name="pk_board_type_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="card" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="title" type="varchar" length="150" jt="12" mandatory="y" />
+			<column name="description" type="varchar" length="300" jt="12" mandatory="y" />
+			<column name="due_data" type="varchar" jt="12" mandatory="y" />
+			<column name="assigned to" type="integer" jt="4" />
+			<column name="created_date" type="date" jt="91" />
+			<column name="created_by" type="integer" jt="4" />
+			<column name="tag_id" type="integer" jt="4" />
+			<column name="status_id" type="integer" length="1" jt="4" />
+			<index name="pk_card_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_card_created_by" unique="NORMAL" >
+				<column name="created_by" />
+			</index>
+			<index name="idx_card_assigned to:" unique="NORMAL" >
+				<column name="assigned to" />
+			</index>
+			<index name="idx_card_tag_id" unique="NORMAL" >
+				<column name="tag_id" />
+			</index>
+			<index name="idx_card_status_id" unique="NORMAL" >
+				<column name="status_id" />
+			</index>
+			<fk name="fk_card_user" to_schema="boards" to_table="user" >
+				<fk_column name="created_by" pk="id" />
+			</fk>
+			<fk name="fk_card_user_0" to_schema="boards" to_table="user" >
+				<fk_column name="assigned to" pk="id" />
+			</fk>
+			<fk name="fk_card_status" to_schema="boards" to_table="status" >
+				<fk_column name="status_id" pk="id" />
+			</fk>
+		</table>
+		<table name="card_role" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="100" jt="12" mandatory="y" />
+			<index name="pk_card_role_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="card_tag_linl" >
+			<column name="card_id" type="integer" jt="4" />
+			<column name="tag_id" type="integer" jt="4" />
+			<index name="idx_card_tag_linl_card_id" unique="NORMAL" >
+				<column name="card_id" />
+			</index>
+			<index name="idx_card_tag_linl_tag_id" unique="NORMAL" >
+				<column name="tag_id" />
+			</index>
+			<fk name="fk_card_tag_linl_card" to_schema="boards" to_table="card" >
+				<fk_column name="card_id" pk="id" />
+			</fk>
+			<fk name="fk_card_tag_linl_tag" to_schema="boards" to_table="tag" >
+				<fk_column name="tag_id" pk="id" />
+			</fk>
+		</table>
+		<table name="collection" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="100" jt="12" />
+			<column name="description" type="varchar" length="300" jt="12" />
+			<column name="create_by" type="integer" jt="4" />
+			<index name="pk_collection_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_collection_create_by" unique="NORMAL" >
+				<column name="create_by" />
+			</index>
+			<fk name="fk_collection_user" to_schema="boards" to_table="user" >
+				<fk_column name="create_by" pk="id" />
+			</fk>
+		</table>
+		<table name="link_card_role" >
+			<column name="card_id" type="integer" jt="4" />
+			<column name="card_role_id" type="integer" jt="4" />
+			<index name="idx_link_card_role_card_id" unique="NORMAL" >
+				<column name="card_id" />
+			</index>
+			<index name="idx_link_card_role_card_role_id" unique="NORMAL" >
+				<column name="card_role_id" />
+			</index>
+			<fk name="fk_link_card_role_card" to_schema="boards" to_table="card" >
+				<fk_column name="card_id" pk="id" />
+			</fk>
+			<fk name="fk_link_card_role_card_role" to_schema="boards" to_table="card_role" >
+				<fk_column name="card_role_id" pk="id" />
+			</fk>
+		</table>
+		<table name="status" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="100" jt="12" />
+			<column name="is_active" type="bool" jt="-7" />
+			<index name="pk_card_status_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="tag" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="100" jt="12" />
+			<index name="pk_tag_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="user" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="email" type="varchar" length="150" jt="12" mandatory="y" />
+			<column name="username" type="varchar" length="150" jt="12" mandatory="y" />
+			<column name="last_name" type="varchar" length="100" jt="12" />
+			<column name="first_name" type="varchar" length="100" jt="12" />
+			<column name="password" type="varchar" jt="12" />
+			<index name="pk_user_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+	</schema>
+	<layout name="Default Layout" id="Layout_518f1f" show_relation="columns" >
+		<entity schema="boards" name="card_role" color="C1D8EE" x="736" y="144" />
+		<entity schema="boards" name="board_spec" color="C1D8EE" x="384" y="560" />
+		<entity schema="boards" name="board" color="C1D8EE" x="224" y="560" />
+		<entity schema="boards" name="board_type" color="C1D8EE" x="224" y="736" />
+		<entity schema="boards" name="card" color="C1D8EE" x="304" y="192" />
+		<entity schema="boards" name="user" color="C1D8EE" x="64" y="240" />
+		<entity schema="boards" name=" profile" color="C1D8EE" x="64" y="48" />
+		<entity schema="boards" name="collection" color="C1D8EE" x="48" y="560" />
+		<entity schema="boards" name="card_tag_linl" color="C1D8EE" x="544" y="256" />
+		<entity schema="boards" name="tag" color="C1D8EE" x="736" y="256" />
+		<entity schema="boards" name="link_card_role" color="C1D8EE" x="544" y="144" />
+		<entity schema="boards" name="status" color="C1D8EE" x="544" y="368" />
+		<entity schema="boards" name="audit" color="C1D8EE" x="944" y="128" />
+	</layout>
+</project>
