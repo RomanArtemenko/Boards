@@ -4,6 +4,7 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 
 # Create your models here.
 
+
 class CustomUserManager(UserManager):
     def _create_user(self, email, password=None, **extra_fields):
         """
@@ -39,7 +40,6 @@ class CustomUserManager(UserManager):
             raise ValueError('Superuser must have is_superuser=True.')
 
         return self._create_user(email, password, **extra_fields)
-
 
 
 class CustomUser(AbstractUser):
