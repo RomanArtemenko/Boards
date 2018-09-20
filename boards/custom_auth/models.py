@@ -65,3 +65,13 @@ class CustomUser(AbstractUser):
 
     class Meta(AbstractUser.Meta):
         swappable = 'AUTH_USER_MODEL'
+
+class Profile(models.Model):
+    user = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        primary_key=True
+    )
+    phone_number = models.CharField(max_length=10,default='')
+    notification = models.BooleanField(default=True)
+

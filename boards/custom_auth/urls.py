@@ -3,7 +3,10 @@ from django.urls import path, include
 from . import views
 from rest_framework.routers import DefaultRouter
 
+router = DefaultRouter()
+router.register(r'signup', views.SingUp)
+router.register(r'signin', views.SignIn)
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
+    path('', include(router.urls)),
 ]
