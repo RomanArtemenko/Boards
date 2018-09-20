@@ -127,3 +127,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'custom_auth.CustomUser'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'AnonimFakeov@gmail.com'
+EMAIL_HOST_PASSWORD = 'Fuck2014All'
+EMAIL_PORT = 587
+
+ACCOUNT_ACTIVATION_DAYS = 7
