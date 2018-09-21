@@ -1,7 +1,6 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from rest_framework.authentication import authenticate
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
@@ -59,7 +58,7 @@ class SignInSerializer(serializers.Serializer):
         )
 
         if user is None:
-            raise ValidationError('Wrong email or password')
+            raise ValidationError('Wrong email or password or not confirmed email')
 
         token, created = Token.objects.get_or_create(user=user)
         return token

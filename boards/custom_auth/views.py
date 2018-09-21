@@ -51,7 +51,7 @@ class SignIn(viewsets.mixins.CreateModelMixin, viewsets.GenericViewSet):
 
 class ActivationView(View):
 
-    def get(self, uidb64, token):
+    def get(self, request, uidb64, token):
         try:
             uid = force_text(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
@@ -73,7 +73,7 @@ class ConfirmEmailView():
     def __init__(self, request, user):
         self.domain = get_current_site(request).domain
         self.user = user
-        self.uid = urlsafe_base64_encode(force_bytes(user.pk))
+        self.uid = urlsafe_base64_encode(force_bytes(user.pk)).decode()
         self.token = account_activation_token.make_token(user)
 
     def _make_body(self):
