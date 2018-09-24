@@ -7,6 +7,7 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.http import HttpResponse
 from django.views import View
+from django.views.generic import TemplateView
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -94,8 +95,12 @@ class ConfirmEmailView():
         )
         email.send()
 
+class MainView(TemplateView):
+    template_name = 'custom_auth/index.html'
 
 
+class FBRedirect(View):
+    template_name = 'custom_auth/fb_redirect.html'
 
-
-
+    def get(self, request, *arg, **kwargs):
+        return render(request, self.template_name)
