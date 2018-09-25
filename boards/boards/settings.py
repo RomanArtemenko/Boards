@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'custom_auth',
     'rest_framework',
     'rest_framework.authtoken',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -50,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'boards.urls'
@@ -65,6 +67,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -135,3 +139,20 @@ EMAIL_HOST_PASSWORD = 'Fuck2014All'
 EMAIL_PORT = 587
 
 ACCOUNT_ACTIVATION_DAYS = 7
+
+SOCIAL_AUTH_FACEBOOK_KEY = '475548252848714'
+SOCIAL_AUTH_FACEBOOK_SECRET = 'cee11fad8d56de9a195052d9371a9a79'
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email',]
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id,name,email',
+}
+SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'email', 'last_name',]
+SOCIAL_AUTH_FACEBOOK_AUTH_EXTRA_ARGUMENTS = {'display': 'touch'}
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+LOGIN_REDIRECT_URL = 'index'
+
