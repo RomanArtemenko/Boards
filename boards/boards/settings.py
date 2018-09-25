@@ -131,6 +131,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'custom_auth.CustomUser'
+SOCIAL_AUTH_USER_MODEL = AUTH_USER_MODEL
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
@@ -140,19 +141,40 @@ EMAIL_PORT = 587
 
 ACCOUNT_ACTIVATION_DAYS = 7
 
+SOCIAL_AUTH_FACEBOOK_API_VERSION = '3.1'
 SOCIAL_AUTH_FACEBOOK_KEY = '475548252848714'
 SOCIAL_AUTH_FACEBOOK_SECRET = 'cee11fad8d56de9a195052d9371a9a79'
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email',]
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': 'id,name,email',
 }
-SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'email', 'last_name',]
-SOCIAL_AUTH_FACEBOOK_AUTH_EXTRA_ARGUMENTS = {'display': 'touch'}
+SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['email', 'username', 'first_name', 'last_name']
+# SOCIAL_AUTH_FACEBOOK_AUTH_EXTRA_ARGUMENTS = {'display': 'touch'}
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.facebook.FacebookOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
 
-LOGIN_REDIRECT_URL = 'index'
+# SOCIAL_AUTH_PIPELINE = (
+#     'social_core.pipeline.social_auth.social_details',
+#     'social_core.pipeline.social_auth.social_uid',
+#     'social_core.pipeline.social_auth.social_user',
+#     'social_core.pipeline.user.get_username',
+#     'social_core.pipeline.user.create_user',
+#     'social_core.pipeline.social_auth.associate_user',
+#     'social_core.pipeline.social_auth.load_extra_data',
+#     'social_core.pipeline.user.user_details',
+#     'social_core.pipeline.social_auth.associate_by_email',
+# )
 
+SOCIAL_AUTH_FACEBOOK_LOGIN_URL = 'xxx'
+SOCIAL_AUTH_LOGIN_URL = 'xxx'
+#SOCIAL_AUTH_LOGIN_REDIRECT_URL
+# LOGIN_URL
+
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'xxx'
+LOGIN_REDIRECT_URL = 'xxx'
+# LOGIN_URL = '/login/facebook/'

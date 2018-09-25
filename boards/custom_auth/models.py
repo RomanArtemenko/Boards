@@ -1,12 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.auth.validators import UnicodeUsernameValidator
+import random
 
 # Create your models here.
 
 
 class CustomUserManager(UserManager):
-    def _create_user(self, email, password=None, **extra_fields):
+    def _create_user(self, email, password, **extra_fields):
         """
          Creates and saves a User with the given email and password.
         """
@@ -17,15 +18,20 @@ class CustomUserManager(UserManager):
             email=self.normalize_email(email),
             ** extra_fields
         )
+
         user.set_password(password)
         user.save(using=self._db)
 
         return user
 
-    def create_user(self, email, password, **extra_fields):
+    def create_user(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
         extra_fields.setdefault('is_active', False)
+
+        if password is None:
+            password = self._default_pass()
+
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
@@ -43,6 +49,12 @@ class CustomUserManager(UserManager):
 
         return self._create_user(email, password, **extra_fields)
 
+    def _default_pass(self):
+        pas = ''
+        for x in range(16):
+            pas = pas + random.choice(list('1234567890abcdefghigklmnopqrstuvyxwzABCDEFGHIGKLMNOPQRSTUVYXWZ'))
+
+        return pas
 
 class CustomUser(AbstractUser):
     username_validator = UnicodeUsernameValidator()

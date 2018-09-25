@@ -11,6 +11,12 @@ urlpatterns = [
     # path('activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', views.ActivationView.as_view(), name='activate'),
     url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         views.ActivationView.as_view(), name='activate'),
-    url('', include('social_django.urls', namespace='social')),
+
+    path('', views.MainView.as_view(), name='index'),
+    path(
+        'fb_redirect/',
+        views.FBRedirect.as_view(),
+        name='xxx'
+    ),
     path('', include(router.urls)),
 ]
