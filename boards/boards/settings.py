@@ -57,6 +57,14 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'boards.urls'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -136,6 +144,7 @@ try:
 except:
     raise ImportError("social_config.py not found")
 
+REST_SOCIAL_OAUTH_REDIRECT_URI = 'xxx'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'xxx'
 SOCIAL_AUTH_FACEBOOK_LOGIN_URL = 'xxx'
 LOGIN_REDIRECT_URL = 'xxx'
@@ -168,3 +177,4 @@ AUTHENTICATION_BACKENDS = (
 )
 
 SOCIAL_AUTH_FACEBOOK_AUTH_EXTRA_ARGUMENTS = {'display': 'touch'}
+
