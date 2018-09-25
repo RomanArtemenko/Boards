@@ -104,7 +104,7 @@ class FBRedirect(View):
     template_name = 'custom_auth/fb_redirect.html'
 
     def get(self, request, *arg, **kwargs):
-        return render(request, self.template_name)
+        return render(request, self.template_name, *arg, **kwargs)
 
 
 

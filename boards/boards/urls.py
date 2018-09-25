@@ -21,6 +21,6 @@ from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url('', include('social_django.urls', namespace='social')),
     path('', include('custom_auth.urls')),
+    url('', include('social_django.urls', namespace='social')),
 ]
