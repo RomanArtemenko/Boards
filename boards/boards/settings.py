@@ -131,6 +131,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+try:
+    from .social_config import OAUTH_CREDENTIALS
+except:
+    raise ImportError("social_config.py not found")
+
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'xxx'
 SOCIAL_AUTH_FACEBOOK_LOGIN_URL = 'xxx'
 LOGIN_REDIRECT_URL = 'xxx'

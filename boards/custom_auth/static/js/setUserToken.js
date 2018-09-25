@@ -1,6 +1,6 @@
 $(document).ready(function(){
     var token = $('#access_token').val();
 
-    localStorage.setItem('UserToken', $('#access_token').val());
-    window.location.href = "/";
+    localStorage.setItem('UserToken', token);
+//    window.location.href = "/";
 });

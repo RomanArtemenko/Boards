@@ -14,6 +14,16 @@ urlpatterns = [
 
     path('', views.MainView.as_view(), name='index'),
     path(
+        'auth/facebook',
+        views.SignInFacebookView.as_view(),
+        name='sign-in-facebook'
+    ),
+    path(
+        'auth/facebook/redirect',
+        views.FacebookRedirectView.as_view(),
+        name='sign-in-facebook-redirect'
+    ),
+    path(
         'fb_redirect/',
         views.FBRedirect.as_view(),
         name='xxx'
