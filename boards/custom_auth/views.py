@@ -122,7 +122,6 @@ class SignInFacebookView(View):
         'redirect_uri':
         'http://localhost:8000/auth/facebook/redirect',
         # 'http://localhost:8000',
-        # 'state': '{st=state123abc,ds=123456789}',
         'response_type': 'code',
         'scope': 'email'
     }
@@ -134,57 +133,28 @@ class SignInFacebookView(View):
 
 
 class FacebookRedirectView(View):
-    # template_name = "custom_auth/sign_in_facebook_redirect.html"
     template_name = "custom_auth/fb_redirect.html"
-    clint_id = OAUTH_CREDENTIALS['facebook']['id']
-    secret_key = OAUTH_CREDENTIALS['facebook']['secret']
-    access_url = 'https://graph.facebook.com/v3.1/oauth/access_token?'
-    access_vars = {
-        'client_id': clint_id,
-        'redirect_uri': 'http://localhost:8000/auth/facebook/redirect',
-        'client_secret': secret_key,
-        'code': ''
-    }
-    info_url = 'https://graph.facebook.com/v3.1/me?'
-    info_vars = {
-        'access_token': '',
-        'fields': 'id,name,last_name,first_name,email',
-        'format': 'json',
-        'method': 'get',
-        'pretty': '0',
-        'suppress_http_code': '1'
-    }
+    # clint_id = OAUTH_CREDENTIALS['facebook']['id']
+    # secret_key = OAUTH_CREDENTIALS['facebook']['secret']
+    # access_url = 'https://graph.facebook.com/v3.1/oauth/access_token?'
+    # access_vars = {
+    #     'client_id': clint_id,
+    #     'redirect_uri': 'http://localhost:8000/auth/facebook/redirect',
+    #     'client_secret': secret_key,
+    #     'code': ''
+    # }
+    # info_url = 'https://graph.facebook.com/v3.1/me?'
+    # info_vars = {
+    #     'access_token': '',
+    #     'fields': 'id,name,last_name,first_name,email',
+    #     'format': 'json',
+    #     'method': 'get',
+    #     'pretty': '0',
+    #     'suppress_http_code': '1'
+    # }
 
     def get(self, request, *args, **kwargs):
         if 'code' not in request.GET:
             return redirect('main')
 
-        code = request.GET['code']
-        self.access_vars.update({'code': code})
-        url_at = self.access_url + urllib.parse.urlencode(self.access_vars)
-        at = requests.get(url_at)
-        access_token = at.json()['access_token']
-        self.info_vars.update({'access_token': access_token})
-        url_info = self.info_url + urllib.parse.urlencode(self.info_vars)
-        user_info = requests.get(url_info)
-
-        user, created = User.objects.get_or_create(
-            email=user_info.json()['email']
-        )
-        if created:
-            user.last_name = user_info.json()['last_name']
-            user.first_name = user_info.json()['first_name']
-            user.email = user_info.json()['name']
-            user.save()
-
-        token, created = Token.objects.get_or_create(user_id=user.pk)
-
-        return render(request, self.template_name, {
-            'params': request.GET,
-            'at': at.json(),
-            'user_info': user_info.json()}
-        )
-
-
-
-
+        return render(request, self.template_name)

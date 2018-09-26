@@ -28,6 +28,6 @@ urlpatterns = [
         views.FBRedirect.as_view(),
         name='xxx'
     ),
-    url(r'^api/login/', include('rest_social_auth.urls_token')),
+
     path('', include(router.urls)),
 ]

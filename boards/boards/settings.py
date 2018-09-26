@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'social_django',
     'rest_social_auth',
+
+
 ]
 
 MIDDLEWARE = [
@@ -144,7 +146,7 @@ try:
 except:
     raise ImportError("social_config.py not found")
 
-REST_SOCIAL_OAUTH_REDIRECT_URI = 'xxx'
+# REST_SOCIAL_OAUTH_REDIRECT_URI = 'xxx'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'xxx'
 SOCIAL_AUTH_FACEBOOK_LOGIN_URL = 'xxx'
 LOGIN_REDIRECT_URL = 'xxx'
