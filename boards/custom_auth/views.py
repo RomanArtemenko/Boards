@@ -11,6 +11,7 @@ from django.views.generic import TemplateView
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .serializers import UserSerializer, SignUpSerializer, SignInSerializer
 from .tokens import account_activation_token
@@ -158,3 +159,17 @@ class FacebookRedirectView(View):
             return redirect('main')
 
         return render(request, self.template_name)
+
+class UserInfo(viewsets.mixins.ListModelMixin ,viewsets.GenericViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        return self.request.user
+
+    def list(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+

@@ -12,64 +12,66 @@ $(function () {
 		// 		"manufacturer" = ["Apple","Sony"],
 		//		"storage" = [16]
 		//	}
-		filters = {};
+		filters = {},
+		userInfo = {},
+		tokenKey = 'UserToken';
 
+//    alert('Token in Localstorage : ' + localStorage.getItem(tokenKey));
+    getProfile();
+    setUserInfo();
+//    alert('User info : ' + userInfo);
 
 	//	Event handlers for frontend navigation
 
 	//	Checkbox filtering
 
-//	$('.sign-in').click(function () {
-//	    window.location.hash = '#sign-in';
-//	});
-
 	$('#btnSignIn').click(function () {
-
-        var email = $('#signInEmail').val();
-        var password = $('#signInPassword').val();
 
         $.ajax({
             type: "POST",
             url: "/signin/",
             data: JSON.stringify({
-                "email": email,
-                "password": password
+                "email": $('#signInEmail').val(),
+                "password": $('#signInPassword').val()
             }),
             contentType: "application/json",
             cache: false,
             success: function(data){
-                localStorage.setItem('UserToken', 'Token ' + data['token']);
+                localStorage.setItem(tokenKey, data);
                 console.log(data);
-//                window.location.hash = '#';
+                getProfile();
+                window.location.hash = '#';
             },
             error: function(xhr){
-                console.log(xhr);
+                $('#signInErr').html(xhr.responseText);
             }
         });
 
 	});
 
-	$('#btnRegister').click(function () {
 
-        var email = $('#signInEmail').val();
-        var password = $('#signInPassword').val();
+	$('#btnRegister').click(function () {
 
         $.ajax({
             type: "POST",
-            url: "/signin/",
+            url: "/signup/",
             data: JSON.stringify({
-                "email": email,
-                "password": password
+                "email": $('#signUpEmail').val(),
+                "username": $('#signUpUserName').val(),
+                "first_name": $('#signUpFirstName').val(),
+                "last_name": $('#signUpLastName').val(),
+                "phone_number": $('#signUpPhonenumber').val(),
+                "password":  $('#signUpPassword').val(),
+                "password_confirm": $('#signUpPasswordConfirm').val()
             }),
             contentType: "application/json",
             cache: false,
             success: function(data){
-                localStorage.setItem('UserToken', 'Token ' + data['token']);
                 console.log(data);
-//                window.location.hash = '#';
+                window.location.hash = '#sign';
             },
             error: function(xhr){
-                console.log(xhr);
+                $('#signUpErr').html(xhr.responseText);
             }
         });
 
@@ -220,6 +222,47 @@ $(function () {
 	$(window).on('hashchange', function(){
 		render(decodeURI(window.location.hash));
 	});
+
+
+	function getProfile() {
+	    var userToken = localStorage.getItem(tokenKey);
+
+	    $.ajax({
+            type: "GET",
+            url: "/profile/",
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("Authorization", localStorage.getItem(tokenKey));
+            },
+            contentType: "application/json",
+            cache: false,
+            success: function(data){
+                userInfo = JSON.stringify(data);
+                alert("Save : " + userInfo );
+                localStorage.setItem("User", JSON.stringify(data));
+//                alert('My name : ' + data["username"]);
+//                name = data["username"];
+
+//                $('.tzine').html(name);
+            },
+            error: function(xhr){
+                console.log(xhr);
+            }
+        });
+
+        console.log("User info : " + userInfo );
+	}
+
+	function setUserInfo() {
+        alert("Load : " + JSON.stringify(userInfo) );
+        t = JSON.parse(localStorage.getItem("User"));
+	    alert("! :" + t["username"]);
+//	    k = JSON.parse(userInfo);
+        alert("# :" + userInfo["id"]);
+
+	    if (userInfo) {
+	        $('.tzine').html(t["username"]);
+	    }
+	}
 
 
 	// Navigation
