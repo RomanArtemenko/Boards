@@ -10,7 +10,7 @@
 	<title>Single Page App Without A Framework</title>
 
 	<link href="http://fonts.googleapis.com/css?family=Open+Sans:400" rel="stylesheet">
-	<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<link href="{% static 'css/styles.css' %}" rel="stylesheet">
 </head>
 
@@ -96,10 +96,9 @@
 
 			<div class="preview-large">
 
-				<div class="form-login">
+				<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
 
-					  <!--<img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">-->
-					  <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+				<div class="form-signin">
 					  <label for="signInEmail" class="sr-only">Email address</label>
 					  <input type="email" id="signInEmail" class="form-control" placeholder="Email address" required autofocus>
 					  <label for="signInPassword" class="sr-only">Password</label>
@@ -113,11 +112,11 @@
 
 					  </div>
 
-					<button id="btnSignIn">Sign in</button>
+					<button id="btnSignIn" class="btn btn-primary btn-block">Sign in</button>
 					<!--<button id="btnToSignUp">Sign up</button>-->
-					<a class="btn btn-primary" href="#sign-up" role="button">Sign Up</a>
+					<a class="btn btn-primary btn-block" href="#sign-up" role="button">Sign Up</a>
 					<!--<button id="btnToSignInFacebook">Sign in Facebook</button>-->
-					<a class="btn btn-primary" href="http://localhost:8000/auth/facebook" role="button">Sign In Facebook</a>
+					<a class="btn btn-primary btn-block" href="http://localhost:8000/auth/facebook" role="button">Sign In Facebook</a>
 
 					  <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
 				</div>
@@ -132,33 +131,37 @@
 		<div class="sign-up page">
 			<div class="overlay"></div>
 			<div class="preview-large">
+
 				<h1 class="h3 mb-3 font-weight-normal">Please enter your registration data</h1>
-				  <label for="signUpEmail" class="sr-only">Email address</label>
-				  <input type="email" id="signUpEmail" class="form-control" placeholder="Email address" required autofocus>
-  				  <label for="signUpUserName" class="sr-only">Username</label>
-				  <input type="text" id="signUpUserName" class="form-control" placeholder="Username" required autofocus>
-				  <label for="signUpFirstName" class="sr-only">First Name</label>
-				  <input type="text" id="signUpFirstName" class="form-control" placeholder="First Name" required autofocus>
-				  <label for="signUpLastName" class="sr-only">Last Name</label>
-				  <input type="text" id="signUpLastName" class="form-control" placeholder="Last Name" required autofocus>
-				  <label for="signUpPhonenumber" class="sr-only">Phonenumber</label>
-				  <input type="text" id="signUpPhonenumber" class="form-control" placeholder="Phonenumber" required autofocus>
-				  <label for="signUpPassword" class="sr-only">Password</label>
-				  <input type="password" id="signUpPassword" class="form-control" placeholder="Password" required>
-				  <label for="signUpPasswordConfirm" class="sr-only">Password confirm</label>
-				  <input type="password" id="signUpPasswordConfirm" class="form-control" placeholder="Password confirm" required>
 
-				  <div id="signUpErr">
+				<div class="form-signin">
+					  <label for="signUpEmail" class="sr-only">Email address</label>
+					  <input type="email" id="signUpEmail" class="form-control" placeholder="Email address" required autofocus>
+					  <label for="signUpUserName" class="sr-only">Username</label>
+					  <input type="text" id="signUpUserName" class="form-control" placeholder="Username" required autofocus>
+					  <label for="signUpFirstName" class="sr-only">First Name</label>
+					  <input type="text" id="signUpFirstName" class="form-control" placeholder="First Name" required autofocus>
+					  <label for="signUpLastName" class="sr-only">Last Name</label>
+					  <input type="text" id="signUpLastName" class="form-control" placeholder="Last Name" required autofocus>
+					  <label for="signUpPhonenumber" class="sr-only">Phonenumber</label>
+					  <input type="text" id="signUpPhonenumber" class="form-control" placeholder="Phonenumber" required autofocus>
+					  <label for="signUpPassword" class="sr-only">Password</label>
+					  <input type="password" id="signUpPassword" class="form-control" placeholder="Password" required>
+					  <label for="signUpPasswordConfirm" class="sr-only">Password confirm</label>
+					  <input type="password" id="signUpPasswordConfirm" class="form-control" placeholder="Password confirm" required>
 
-				  </div>
+					  <div id="signUpErr">
+
+					  </div>
 
 
-				  <div class="checkbox mb-3">
+					  <div class="checkbox mb-3">
 
-				  </div>
+					  </div>
 
-				  <button class="btn btn-lg btn-primary btn-block" id="btnRegister">Register</button>
-				  <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+					  <button class="btn btn-lg btn-primary btn-block" id="btnRegister">Register</button>
+					  <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+				</div>
 
 				<span class="close">×</span>
 			</div>

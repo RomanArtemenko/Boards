@@ -17,8 +17,8 @@ $(function () {
 		tokenKey = 'UserToken';
 
 //    alert('Token in Localstorage : ' + localStorage.getItem(tokenKey));
-    getProfile();
-    setUserInfo();
+//    getProfile();
+//    setUserInfo();
 //    alert('User info : ' + userInfo);
 
 	//	Event handlers for frontend navigation

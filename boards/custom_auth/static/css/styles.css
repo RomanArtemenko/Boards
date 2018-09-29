@@ -21,7 +21,7 @@ header {
 	left:0;
 	right:0;
 
-	height: 40px;
+	height: 80px;
 	z-index: 100;
 
 	background-color: #282b2c;
@@ -468,85 +468,6 @@ header h2.tzine a{
 	cursor: pointer;
 }
 
-
-
-/*---------------------------
-	Sign In Facebook Page
-----------------------------*/
-
-.sign-in-facebook{
-	z-index: 100;
-}
-
-.overlay{
-	height: 20px;
-	width: 100%;
-	position: fixed;
-	top: 0;
-	left: 0;
-	background-color: #282b2c;
-	transition: 0.6s;
-	z-index: 100;
-}
-
-.sign-in-facebook.visible .overlay{
-	height: 100%;
-}
-
-.preview-large{
-	box-sizing: border-box;
-	width: 760px;
-	height: 550px;
-	position: fixed;
-	left: 50%;
-	margin-left: -375px;
-	top: 50%;
-	margin-top: -275px;
-	pointer-events: none;
-
-	border-radius: 6px;
-	background-color:  #ffffff;
-
-	z-index: 102;
-	opacity: 0;
-	transition: 0.4s;
-
-}
-
-.sign-in-facebook.visible .preview-large{
-	opacity: 1;
-	transition: 1.4s;
-	pointer-events: auto;
-}
-
-.preview-large h3{
-	margin-top: 20px;
-}
-
-.preview-large img{
-	width: 100%;
-	height: 280px;
-	border-bottom: 3px solid #efefef;
-	border-radius: 5px 5px 0 0;
-}
-
-.preview-large p{
-	line-height: 23px;
-	padding: 50px 45px;
-}
-
-.close{
-	position: absolute;
-	right: 25px;
-	top: 15px;
-
-	font-size: 28px;
-	color: #555;
-	cursor: pointer;
-}
-
-
-
 /*---------------------------
 	Sign Up Page
 ----------------------------*/
@@ -645,3 +566,35 @@ header h2.tzine a{
 	font-size: 40px;
 }
 
+/*----------------------
+    Login
+-----------------------*/
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .checkbox {
+  font-weight: 400;
+}
+.form-signin .form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+}
+.form-signin input[type="password"] {
+  margin-bottom: -1px;
+}
+.form-signin input[type="text"] {
+  margin-bottom: -1px;
+}
