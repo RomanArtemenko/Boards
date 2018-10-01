@@ -35,6 +35,11 @@ header a {
 	text-decoration: none;
 }
 
+header div.user{
+	float: right;
+	opacity:0.9;
+}
+
 header h2.tzine{
 	float: right;
 	opacity:0.9;

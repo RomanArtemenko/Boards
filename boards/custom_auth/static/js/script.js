@@ -13,13 +13,12 @@ $(function () {
 		//		"storage" = [16]
 		//	}
 		filters = {},
-		userInfo = {},
-		tokenKey = 'UserToken';
+		tokenKey = 'UserToken',
+		userToken = null,
+        userInfo = [];
 
-//    alert('Token in Localstorage : ' + localStorage.getItem(tokenKey));
-//    getProfile();
-//    setUserInfo();
-//    alert('User info : ' + userInfo);
+     initLogin();
+
 
 	//	Event handlers for frontend navigation
 
@@ -37,9 +36,12 @@ $(function () {
             contentType: "application/json",
             cache: false,
             success: function(data){
-                localStorage.setItem(tokenKey, data);
+//                localStorage.setItem(tokenKey, data);
+                localStorage.setItem('UserToken', data);
                 console.log(data);
-                getProfile();
+//                getProfile();
+                initLogin();
+
                 window.location.hash = '#';
             },
             error: function(xhr){
@@ -79,6 +81,16 @@ $(function () {
 
 	$('#btnToSignUp').click(function () {
 	    window.location.hash = '#sign-up';
+	});
+
+	$('#btnLogout').click(function () {
+	    try{
+	        localStorage.clear();
+	        initLogin();
+	    }
+	    catch(error) {
+	        console.log(error);
+	    }
 	});
 
 
@@ -204,17 +216,17 @@ $(function () {
 	// These are called on page load
 
 	// Get data about our products from products.json.
-	$.getJSON( "products.json", function( data ) {
-
-		// Write the data into our global variable.
-		products = data;
-
-		// Call a function to create HTML for all the products.
-		generateAllProductsHTML(products);
-
-		// Manually trigger a hashchange to start the app.
-		$(window).trigger('hashchange');
-	});
+//	$.getJSON( "products.json", function( data ) {
+//
+//		// Write the data into our global variable.
+//		products = data;
+//
+//		// Call a function to create HTML for all the products.
+//		generateAllProductsHTML(products);
+//
+//		// Manually trigger a hashchange to start the app.
+//		$(window).trigger('hashchange');
+//	});
 
 
 	// An event handler with calls the render function on every hashchange.
@@ -225,24 +237,18 @@ $(function () {
 
 
 	function getProfile() {
-	    var userToken = localStorage.getItem(tokenKey);
 
 	    $.ajax({
             type: "GET",
             url: "/profile/",
             beforeSend: function(xhr, settings) {
-                xhr.setRequestHeader("Authorization", localStorage.getItem(tokenKey));
+                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
             },
             contentType: "application/json",
             cache: false,
             success: function(data){
                 userInfo = JSON.stringify(data);
-                alert("Save : " + userInfo );
                 localStorage.setItem("User", JSON.stringify(data));
-//                alert('My name : ' + data["username"]);
-//                name = data["username"];
-
-//                $('.tzine').html(name);
             },
             error: function(xhr){
                 console.log(xhr);
@@ -252,15 +258,36 @@ $(function () {
         console.log("User info : " + userInfo );
 	}
 
-	function setUserInfo() {
-        alert("Load : " + JSON.stringify(userInfo) );
-        t = JSON.parse(localStorage.getItem("User"));
-	    alert("! :" + t["username"]);
-//	    k = JSON.parse(userInfo);
-        alert("# :" + userInfo["id"]);
 
-	    if (userInfo) {
-	        $('.tzine').html(t["username"]);
+	function setUserInfo() {
+        try {
+            t = JSON.parse(localStorage.getItem("User"));
+            $('#username').html(t["username"]);
+        } catch(error) {
+            console.log(error);
+            $('#username').html('User');
+        }
+	}
+
+
+	function initLogin() {
+	    try{
+    	    userToken = localStorage.getItem('UserToken');
+	    }catch(error){
+	        userToken = null;
+	        console.log(error);
+	    }
+
+	    getProfile();
+
+	    if(userToken) {
+            setUserInfo();
+
+            $('.non-logged-in').hide();
+            $('.logged-in').show();
+	    } else {
+            $('.non-logged-in').show();
+            $('.logged-in').hide();
 	    }
 	}
 

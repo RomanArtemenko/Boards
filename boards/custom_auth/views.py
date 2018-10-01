@@ -160,6 +160,7 @@ class FacebookRedirectView(View):
 
         return render(request, self.template_name)
 
+
 class UserInfo(viewsets.mixins.ListModelMixin ,viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -172,4 +173,3 @@ class UserInfo(viewsets.mixins.ListModelMixin ,viewsets.GenericViewSet):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
-
