@@ -5,6 +5,23 @@ User = get_user_model()
 # Create your models here.
 
 
+class Status(models.Model):
+    name = models.CharField(max_length=20, unique=True)
+    is_actuve = models.BooleanField(
+        null=False,
+        default=True,
+    )
+    order_num = models.IntegerField()
+    is_default = models.BooleanField(
+        null=False,
+        default=False,
+    )
+
+    def get_default_status():
+        instance = Status.objects.get(is_default=True)
+        return instance.pk
+
+
 class Card(models.Model):
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=1000)
@@ -21,4 +38,9 @@ class Card(models.Model):
         User,
         on_delete=models.PROTECT,
         related_name='owner',
+    )
+    status = models.ForeignKey(
+        Status,
+        on_delete=models.PROTECT,
+        default=Status.get_default_status(),
     )
