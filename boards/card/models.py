@@ -22,6 +22,10 @@ class Status(models.Model):
         return instance.pk
 
 
+class Role(models.Model):
+    name = models.CharField(max_length=20, unique=True)
+
+
 class Card(models.Model):
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=1000)
