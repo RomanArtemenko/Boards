@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .models import Card, Status
+from .models import Card, Status, Role
 
 User = get_user_model()
 
@@ -19,14 +19,23 @@ class StatusSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-class CardSerializer(serializers.ModelSerializer):
-    assigned_to = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    assigned_to_repr = UserLiteSerializer(source='assigned_to', read_only=True)
-    owner = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    owner_repr = UserLiteSerializer(source='owner', read_only=True)
-    status = serializers.PrimaryKeyRelatedField(queryset=Status.objects.all())
-    status_repr = StatusSerializer(source='status', read_only=True)
+class RoleSerializer(serializers.ModelSerializer):
 
     class Meta:
-            model = Card
-            fields = ('id', 'title', 'description', 'assigned_to', 'assigned_to_repr', 'due_date', 'owner', 'owner_repr', 'status', 'status_repr')
+        model = Role
+        fields = ('id', 'name')
+
+
+class CardSerializer(serializers.ModelSerializer):
+    assigned_to = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), allow_null=True)
+    assigned_to_repr = UserLiteSerializer(source='assigned_to', read_only=True)
+    owner = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), allow_null=True, required=False)
+    owner_repr = UserLiteSerializer(source='owner', read_only=True, allow_null=True)
+    status = serializers.PrimaryKeyRelatedField(queryset=Status.objects.all(), allow_null=True, required=False)
+    status_repr = StatusSerializer(source='status', read_only=True, allow_null=True)
+    role_repr = RoleSerializer(source='role', read_only=True, many=True)
+
+    class Meta:
+        model = Card
+        fields = ('id', 'title', 'description', 'assigned_to', 'assigned_to_repr','due_date',
+                  'owner', 'owner_repr', 'status', 'status_repr', 'role_repr')

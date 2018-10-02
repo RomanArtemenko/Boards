@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .models import Card
-from .serializers import CardSerializer
+from rest_framework.permissions import IsAuthenticated
+from .models import Card, Status, Role
+from .serializers import CardSerializer, RoleSerializer, StatusSerializer
 
 # Create your views here.
 
@@ -9,6 +10,41 @@ from .serializers import CardSerializer
 class CardViewSet(viewsets.ModelViewSet):
     serializer_class = CardSerializer
     queryset = Card.objects.all()
+    permission_classes = (IsAuthenticated,)
+
+    def perform_create(self, serializer):
+        print('>>>> WAS CREATED NEW CARD >>>>')
+        serializer.save(owner=self.request.user, status=Status.get_default_status())
+
+    def perform_update(self, serializer):
+        old_instance = self.get_object()
+        new_assigned_to = serializer.validated_data.get('assigned_to')
+        new_status = serializer.validated_data.get('status')
+
+        if new_assigned_to is not None:
+            if old_instance.assigned_to != new_assigned_to:
+                print(">>>> ASSIGNED_TO was changed >>>>")
+
+        if new_status is not None:
+            if old_instance.status != new_status:
+                print(">>>> STATUS was changed >>>>")
+
+        serializer.save()
 
 
+class RoleViewSet(viewsets.mixins.CreateModelMixin,
+                  viewsets.mixins.ListModelMixin,
+                  viewsets.mixins.RetrieveModelMixin,
+                  viewsets.GenericViewSet):
+    serializer_class = RoleSerializer
+    queryset = Role.objects.all()
+    permission_classes = (IsAuthenticated,)
 
+
+class StatusViewSet(viewsets.mixins.RetrieveModelMixin,
+                    viewsets.mixins.ListModelMixin,
+                    viewsets.mixins.UpdateModelMixin,
+                    viewsets.GenericViewSet):
+    serializer_class = StatusSerializer
+    queryset = Status.objects.all()
+    permission_classes = (IsAuthenticated,)
