@@ -40,6 +40,14 @@ class RoleViewSet(viewsets.mixins.CreateModelMixin,
     queryset = Role.objects.all()
     permission_classes = (IsAuthenticated,)
 
+    def get_queryset(self):
+        search_str = self.request.query_params.get('search_str',None)
+
+        if search_str is not None:
+            return self.queryset.filter(name__icontains=search_str)
+
+        return self.queryset
+
 
 class StatusViewSet(viewsets.mixins.RetrieveModelMixin,
                     viewsets.mixins.ListModelMixin,
