@@ -31,6 +31,12 @@ class CardViewSet(viewsets.ModelViewSet):
 
         serializer.save()
 
+    def get_queryset(self):
+        if 'me' in self.request.query_params.keys():
+            return self.queryset.filter(owner=self.request.user)
+
+        return self.queryset
+
 
 class RoleViewSet(viewsets.mixins.CreateModelMixin,
                   viewsets.mixins.ListModelMixin,
