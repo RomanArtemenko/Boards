@@ -315,6 +315,12 @@ $(function () {
 				renderProductsPage(products);
 			},
 
+			//Page with cards created by curent user
+			'#my-cards': function() {
+
+
+			},
+
 			// Single Products page.
 			'#product': function() {
 
