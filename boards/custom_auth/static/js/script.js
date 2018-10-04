@@ -1,5 +1,16 @@
 $(function () {
 
+    var toggler = document.getElementsByClassName("caret");
+    var i;
+
+    for (i = 0; i < toggler.length; i++) {
+      toggler[i].addEventListener("click", function() {
+        this.parentElement.querySelector(".nested").classList.toggle("active");
+        this.classList.toggle("caret-down");
+      });
+    }
+
+
 	// Globals variables
 
 		// 	An array containing objects with information about the products.
@@ -15,15 +26,78 @@ $(function () {
 		filters = {},
 		tokenKey = 'UserToken',
 		userToken = null,
-        userInfo = [];
+        userInfo = [],
+        myCards = [];
 
      initLogin();
 
 
 	//	Event handlers for frontend navigation
 
-	//	Checkbox filtering
+	//	Loading ny cards
+	$('#mycards').click(function () {
+        getMyCards();
+	});
 
+
+	function getMyCards() {
+        $.ajax({
+            type: "GET",
+            url: "/manage/card/?me",
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
+            },
+            contentType: "application/json",
+            cache: false,
+            success: function(data){
+                myCards = data;
+                renderMyCards(data);
+            },
+            error: function(xhr){
+                console.log(xhr);
+            }
+        });
+    }
+
+
+    function renderMyCards(data) {
+        var card;
+
+        $('#tableMyCards > tbody > tr').remove();
+
+        for(card = 0; card < data.length; card++) {
+            row = '<tr>'+
+                  '<th scope="row"><a href="/manage/card/"' + data[card].id + '"/">' + data[card].id  + '</a></th>' +
+                  '<td>' + data[card].status_repr.name + '</td>' +
+                  '<td>' + data[card].title + '</td>' +
+                  '<td>' + cardDate(data[card]) + '</td>' +
+                  '<td>' + userName(data[card]) + '</td>' +
+                  '</tr>';
+
+            $('#tableMyCards > tbody:last-child').append(row);
+        }
+
+        function userName(obj) {
+            var user_name = '';
+
+            if (obj.assigned_to_repr) {
+                user_name = obj.assigned_to_repr.first_name + ' ' + obj.assigned_to_repr.last_name;
+            }
+
+            return user_name;
+        }
+
+        function cardDate(obj) {
+            var date = obj.due_date.split('T')[0];
+            var time = obj.due_date.split('T')[1].substring(0,8);
+
+            return date + ' ' + time;
+        }
+
+    }
+
+
+    // Login
 	$('#btnSignIn').click(function () {
 
         $.ajax({
@@ -51,7 +125,7 @@ $(function () {
 
 	});
 
-
+    // Registration
 	$('#btnRegister').click(function () {
 
         $.ajax({
@@ -79,10 +153,12 @@ $(function () {
 
 	});
 
+    // Redirect to Registration
 	$('#btnToSignUp').click(function () {
 	    window.location.hash = '#sign-up';
 	});
 
+    // Logout
 	$('#btnLogout').click(function () {
 	    try{
 	        localStorage.clear();
@@ -141,34 +217,36 @@ $(function () {
 		}
 	});
 
-	// When the "Clear all filters" button is pressed change the hash to '#' (go to the home page)
-	$('.filters button').click(function (e) {
-		e.preventDefault();
-		window.location.hash = '#';
-	});
+//	// When the "Clear all filters" button is pressed change the hash to '#' (go to the home page)
+//	$('.filters button').click(function (e) {
+//		e.preventDefault();
+//		window.location.hash = '#';
+//	});
+//
+//	$()
 
-	$()
 
+//	// Single product page buttons
+//
+//	var singleProductPage = $('.single-product');
+//
+//	singleProductPage.on('click', function (e) {
+//
+//		if (singleProductPage.hasClass('visible')) {
+//
+//			var clicked = $(e.target);
+//
+//			// If the close button or the background are clicked go to the previous page.
+//			if (clicked.hasClass('close') || clicked.hasClass('overlay')) {
+//				// Change the url hash with the last used filters.
+//				createQueryHash(filters);
+//			}
+//
+//		}
+//
+//	});
 
-	// Single product page buttons
-
-	var singleProductPage = $('.single-product');
-
-	singleProductPage.on('click', function (e) {
-
-		if (singleProductPage.hasClass('visible')) {
-
-			var clicked = $(e.target);
-
-			// If the close button or the background are clicked go to the previous page.
-			if (clicked.hasClass('close') || clicked.hasClass('overlay')) {
-				// Change the url hash with the last used filters.
-				createQueryHash(filters);
-			}
-
-		}
-
-	});
+    var singlCard = $('')
 
 
     // SignIn page buttons
@@ -316,8 +394,11 @@ $(function () {
 			},
 
 			//Page with cards created by curent user
-			'#my-cards': function() {
+			'#card': function() {
 
+				var index = url.split('#card/')[1].trim();
+
+				renderSingleCardPage(index, myCards);
 
 			},
 
