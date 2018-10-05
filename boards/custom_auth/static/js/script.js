@@ -244,6 +244,27 @@ $(function () {
 	});
 
 
+	// Single card page buttons
+
+	var singleCardPage = $('.single-card');
+
+	singleCardPage.on('click', function (e) {
+
+		if (singleCardPage.hasClass('visible')) {
+
+			var clicked = $(e.target);
+
+			// If the close button or the background are clicked go to the previous page.
+			if (clicked.hasClass('close') || clicked.hasClass('overlay')) {
+				// Change the url hash with the last used filters.
+				createQueryHash(filters);
+			}
+
+		}
+
+	});
+
+
 	// These are called on page load
 
 	// Get data about our products from products.json.
@@ -277,6 +298,7 @@ $(function () {
             },
             contentType: "application/json",
             cache: false,
+            async: false,
             success: function(data){
                 userInfo = JSON.stringify(data);
                 localStorage.setItem("User", JSON.stringify(data));
