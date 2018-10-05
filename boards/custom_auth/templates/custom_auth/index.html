@@ -135,17 +135,52 @@
 		</div>
 
 
-		<div class="single-product page">
+		<div class="single-card page">
 
-			<div class="overlay"></div>
+				<div class="overlay"></div>
 
-			<div class="preview-large">
-				<h3>Single product view</h3>
-				<img src=""/>
-				<p></p>
+				<div class="preview-large">
+					<div class="card-head">
+						<label id="cardTitle"><h4>#123 Adding some changes</h4></label>
+					</div>
 
-				<span class="close">×</span>
-			</div>
+					<div class="row">
+						<div class="col">
+							<form class="form-inline">
+								<div class="form-group">
+									<label class="field-name" for="cardOwner">Createt by : </label>
+									<input type="text" class="form-control" id="cardOwner" value="Jane Doe" readonly>
+								</div>
+							</form>
+						</div>
+						<div class="col">
+							<label class="field-name">Status : </label>
+							<label class="field-val" id="cardStatus">New</label>
+						</div>
+						<div class="w-100"></div>
+						<div class="col">
+							<form class="form-inline">
+								<div class="form-group">
+									<label class="field-name" for="cardCreatedDate">Created date : </label>
+									<input type="text" class="form-control" id="cardCreatedDate" value="2018-10-01 08:30:00" readonly>
+								</div>
+							</form>
+						</div>
+						<div class="col">
+							<form class="form-inline">
+								<label class="field-name">Assigned to : </label>
+								<label class="field-val" id="cardAssignedTo">Roman Artemenko</label>
+							</form>
+						</div>
+					</div>
+
+					<div class="form-group decription">
+						<label class="decription" for="cardDescription"><strong>Description : </strong></label>
+						<textarea class="form-control textarea" id="cardDescription" rows="10" readonly></textarea>
+					</div>
+
+					<span class="close">×</span>
+				</div>
 
 		</div>
 

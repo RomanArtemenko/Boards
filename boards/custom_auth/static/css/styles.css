@@ -329,10 +329,10 @@ header h2.tzine a{
 
 
 /*---------------------------
-	Single Product Page
+	Single Card Page
 ----------------------------*/
 
-.single-product{
+.single-card{
 	z-index: 100;
 }
 
@@ -347,7 +347,7 @@ header h2.tzine a{
 	z-index: 100;
 }
 
-.single-product.visible .overlay{
+.single-card.visible .overlay{
 	height: 100%;
 }
 
@@ -371,7 +371,7 @@ header h2.tzine a{
 
 }
 
-.single-product.visible .preview-large{
+.single-card.visible .preview-large{
 	opacity: 1;
 	transition: 1.4s;
 	pointer-events: auto;
@@ -401,6 +401,54 @@ header h2.tzine a{
 	font-size: 28px;
 	color: #555;
 	cursor: pointer;
+}
+
+.card-head{
+	margin: 20px 0 10px 0;
+	padding: 10px 0 0 0;
+}
+
+.col{
+    /*border-color: red; *//* Цвет границы */
+    /*border-style: solid;*/ /* Стиль границы */
+    padding: 2px 0 2px 2px;
+    text-align: left;
+}
+
+.col label{
+	vertical-align:middle;
+}
+
+.row{
+	/*border-color: green;*/ /* Цвет границы */
+    /*border-style: dashed;*/ /* Стиль границы */
+    margin: 0px;
+}
+
+.field-name{
+	font-weight:bold;
+	padding-left: 10px;
+}
+
+.field-val{
+	font-style:italic;
+}
+
+.form-control{
+	margin-left: 13px;
+	padding: 0 0 0 6px;
+}
+
+.textarea{
+	margin: 10px;
+	padding: 10px;
+	width: 720px;
+}
+
+.decription{
+	margin: 10px;
+	padding: 0;
+	text-align: left;
 }
 
 /*---------------------------
