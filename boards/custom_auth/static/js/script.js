@@ -1,5 +1,16 @@
 $(function () {
 
+    var toggler = document.getElementsByClassName("caret");
+    var i;
+
+    for (i = 0; i < toggler.length; i++) {
+      toggler[i].addEventListener("click", function() {
+        this.parentElement.querySelector(".nested").classList.toggle("active");
+        this.classList.toggle("caret-down");
+      });
+    }
+
+
 	// Globals variables
 
 		// 	An array containing objects with information about the products.
@@ -15,15 +26,62 @@ $(function () {
 		filters = {},
 		tokenKey = 'UserToken',
 		userToken = null,
-        userInfo = [];
+        userInfo = [],
+        myCards = [];
 
      initLogin();
 
 
 	//	Event handlers for frontend navigation
 
-	//	Checkbox filtering
+	//	Loading ny cards
+	$('#mycards').click(function () {
+        getMyCards();
+	});
 
+
+	function getMyCards() {
+        $.ajax({
+            type: "GET",
+            url: "/manage/card/?me",
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
+            },
+            contentType: "application/json",
+            cache: false,
+            success: function(data){
+                myCards = data;
+                console.log(data);
+                renderMyCards(data);
+            },
+            error: function(xhr){
+                console.log(xhr);
+            }
+        });
+    }
+
+
+    function renderMyCards(data) {
+        var card;
+
+        $('#tableMyCards > tbody > tr').remove();
+
+        for(card = 0; card < data.length; card++) {
+            row = '<tr>'+
+                  '<th scope="row"><a href="/#card/' + data[card].id + '">' + data[card].id  + '</a></th>' +
+                  '<td>' + data[card].status_repr.name + '</td>' +
+                  '<td>' + data[card].title + '</td>' +
+                  '<td>' + cardDate(data[card], 'created') + '</td>' +
+                  '<td>' + userName(data[card].assigned_to_repr) + '</td>' +
+                  '</tr>';
+
+            $('#tableMyCards > tbody:last-child').append(row);
+        }
+
+    }
+
+
+    // Login
 	$('#btnSignIn').click(function () {
 
         $.ajax({
@@ -51,7 +109,7 @@ $(function () {
 
 	});
 
-
+    // Registration
 	$('#btnRegister').click(function () {
 
         $.ajax({
@@ -79,10 +137,12 @@ $(function () {
 
 	});
 
+    // Redirect to Registration
 	$('#btnToSignUp').click(function () {
 	    window.location.hash = '#sign-up';
 	});
 
+    // Logout
 	$('#btnLogout').click(function () {
 	    try{
 	        localStorage.clear();
@@ -141,35 +201,6 @@ $(function () {
 		}
 	});
 
-	// When the "Clear all filters" button is pressed change the hash to '#' (go to the home page)
-	$('.filters button').click(function (e) {
-		e.preventDefault();
-		window.location.hash = '#';
-	});
-
-	$()
-
-
-	// Single product page buttons
-
-	var singleProductPage = $('.single-product');
-
-	singleProductPage.on('click', function (e) {
-
-		if (singleProductPage.hasClass('visible')) {
-
-			var clicked = $(e.target);
-
-			// If the close button or the background are clicked go to the previous page.
-			if (clicked.hasClass('close') || clicked.hasClass('overlay')) {
-				// Change the url hash with the last used filters.
-				createQueryHash(filters);
-			}
-
-		}
-
-	});
-
 
     // SignIn page buttons
 	var signInPage = $('.sign-in');
@@ -213,6 +244,27 @@ $(function () {
 	});
 
 
+	// Single card page buttons
+
+	var singleCardPage = $('.single-card');
+
+	singleCardPage.on('click', function (e) {
+
+		if (singleCardPage.hasClass('visible')) {
+
+			var clicked = $(e.target);
+
+			// If the close button or the background are clicked go to the previous page.
+			if (clicked.hasClass('close') || clicked.hasClass('overlay')) {
+				// Change the url hash with the last used filters.
+				createQueryHash(filters);
+			}
+
+		}
+
+	});
+
+
 	// These are called on page load
 
 	// Get data about our products from products.json.
@@ -246,6 +298,7 @@ $(function () {
             },
             contentType: "application/json",
             cache: false,
+            async: false,
             success: function(data){
                 userInfo = JSON.stringify(data);
                 localStorage.setItem("User", JSON.stringify(data));
@@ -292,6 +345,43 @@ $(function () {
 	}
 
 
+    function userName(obj) {
+        var user_name = '';
+
+        if (obj) {
+            user_name = obj.first_name + ' ' + obj.last_name;
+        }
+
+        return user_name;
+    }
+
+    function assignedUser(username) {
+
+        if (!username) {
+            username = 'None';
+        }
+
+        return username;
+    }
+
+    function cardDate(obj, type) {
+        var date = "0000-00-00",
+            time = "00:00:00";
+
+        if (type == 'created') {
+            date = obj.created_date.split('T')[0];
+            time = obj.created_date.split('T')[1].substring(0,8);
+        } else if(type == 'due') {
+            date = obj.due_date.split('T')[0];
+            time = obj.due_date.split('T')[1].substring(0,8);
+        } else {
+            console.log("Wrong type date !!!")
+        }
+
+        return date + ' ' + time;
+    }
+
+
 	// Navigation
 
 	function render(url) {
@@ -313,6 +403,15 @@ $(function () {
 				checkboxes.prop('checked',false);
 
 				renderProductsPage(products);
+			},
+
+			//Page with cards created by curent user
+			'#card': function() {
+
+				var index = url.split('#card/')[1].trim();
+
+				renderSingleCardPage(index, myCards);
+
 			},
 
 			// Single Products page.
@@ -436,6 +535,30 @@ $(function () {
 					container.find('h3').text(item.name);
 					container.find('img').attr('src', item.image.large);
 					container.find('p').text(item.description);
+				}
+			});
+		}
+
+		// Show the page.
+		page.addClass('visible');
+
+	}
+
+
+	function renderSingleCardPage(index, data){
+
+		var page = $('.single-card'),
+			container = $('.preview-large');
+
+		if(myCards.length){
+			myCards.forEach(function (item) {
+				if(item.id == index){
+                    $('#cardTitle').html('#' + item.id + ' ' + item.title);
+                    $('#cardOwner').val(userName(item.owner_repr));
+                    $('#cardStatus').html(item.status_repr.name);
+                    $('#cardCreateDate').val(cardDate(item,'created'));
+                    $('#cardAssignedTo').html(assignedUser(userName(item.assigned_to_repr)));
+                    $('#cardDescription').val(item.description);
 				}
 			});
 		}

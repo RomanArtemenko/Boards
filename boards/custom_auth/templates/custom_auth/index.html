@@ -54,63 +54,135 @@
 			<div class="filters">
 				<form>
 
-					<div class="filter-criteria">
-						<span>Manufacturer</span>
-						<label><input type="checkbox" name="manufacturer" value="apple">Apple</label>
-						<label><input type="checkbox" name="manufacturer" value="samsung">Samsung</label>
-						<label><input type="checkbox" name="manufacturer" value="htc">HTC</label>
-						<label><input type="checkbox" name="manufacturer" value="nokia">Nokia</label>
-						<label><input type="checkbox" name="manufacturer" value="zte">ZTE</label>
-						<label><input type="checkbox" name="manufacturer" value="sony">Sony</label>
-					</div>
+					<span>MAIN MENU</span>
 
-					<div class="filter-criteria">
-						<span>Screen Size</span>
-						<label><input type="checkbox" value="16" name="storage">16 GB</label>
-						<label><input type="checkbox" value="32" name="storage">32 GB</label>
-					</div>
+					<button type="button" class="btn btn-success">New Card</button>
 
-					<div class="filter-criteria">
-						<span>OS</span>
-						<label><input type="checkbox" value="android" name="os">Android</label>
-						<label><input type="checkbox" value="ios" name="os">iOS</label>
-						<label><input type="checkbox" value="windows" name="os">Windows</label>
-					</div>
+					<ul id="myUL">
+					  <li><span id="mycards">My Cards</span></li>
+					  <li><span class="caret">Collections</span>
+					    <ul class="nested">
+					      <li><span class="caret">Collection 1</span>
+					        <ul class="nested">
+					          <li><span class="caret">Board 1</span>
+					            <ul class="nested">
+									<li><span class="caret">Assigned To (filter 1)</span>
+							            <ul class="nested">
+							              <li class="caret">John Doe</li>
+							              <li class="caret">Team Member 2</li>
+							            </ul>
+							        </li>
+									<li><span class="caret">Tags (filter 2)</span>
+							            <ul class="nested">
+							              <li class="caret">important release</li>
+							            </ul>
+							        </li>
+					            </ul>
+					          </li>
+					          <li><span class="caret">Board 2</span>
+					          </li>
+					        </ul>
+					      </li>
+					      <li><span class="caret">Collection 2</span>
 
-					<div class="filter-criteria">
-						<span>Camera</span>
-						<label><input type="checkbox" value="5" name="camera">5 Mpx</label>
-						<label><input type="checkbox" value="8" name="camera">8 Mpx</label>
-						<label><input type="checkbox" value="12" name="camera">12 Mpx</label>
-						<label><input type="checkbox" value="15" name="camera">15 Mpx</label>
-					</div>
+					      </li>
+					    </ul>
+					  </li>
+					</ul>
 
-					<button>Clear filters</button>
+					<span>Collections</span>
 
 				</form>
 
 			</div>
 
-			<ul class="products-list">
-				<script id="products-template" type="x-handlebars-template">​
+			<!--<ul class="products-list">-->
+				<!--<script id="products-template" type="x-handlebars-template">​-->
 
-				</script> 
-			</ul>
+				<!--</script> -->
+			<!--</ul>-->
+
+			<div class="col-md-9 ml-sm-auto col-lg-10 px-4 cards-list">
+				<div class="table-responsive ">
+					<table class="table" id="tableMyCards">
+					  <thead class="thead-light">
+						<tr>
+						  <th scope="col">ID</th>
+						  <th scope="col">Status</th>
+						  <th scope="col">Title</th>
+						  <th scope="col">Created Date</th>
+						  <th scope="col">Assigned to</th>
+						</tr>
+					  </thead>
+					  <tbody>
+							<!-- Card data -->
+					  </tbody>
+					</table>
+          		</div>
+			</div>
+
 
 		</div>
 
 
 		<div class="single-product page">
-
 			<div class="overlay"></div>
 
 			<div class="preview-large">
-				<h3>Single product view</h3>
-				<img src=""/>
-				<p></p>
+				<h3>Single card view</h3>
+
 
 				<span class="close">×</span>
 			</div>
+		</div>
+
+
+		<div class="single-card page">
+
+				<div class="overlay"></div>
+
+				<div class="preview-large">
+					<div class="card-head">
+						<label id="cardTitle"><h4>#123 Adding some changes</h4></label>
+					</div>
+
+					<div class="row">
+						<div class="col">
+							<form class="form-inline">
+								<div class="form-group">
+									<label class="field-name" for="cardOwner">Createt by : </label>
+									<input type="text" class="form-control" id="cardOwner" value="Jane Doe" readonly>
+								</div>
+							</form>
+						</div>
+						<div class="col">
+							<label class="field-name">Status : </label>
+							<label class="field-val" id="cardStatus">New</label>
+						</div>
+						<div class="w-100"></div>
+						<div class="col">
+							<form class="form-inline">
+								<div class="form-group">
+									<label class="field-name" for="cardCreatedDate">Created date : </label>
+									<input type="text" class="form-control" id="cardCreatedDate" value="2018-10-01 08:30:00" readonly>
+								</div>
+							</form>
+						</div>
+						<div class="col">
+							<form class="form-inline">
+								<label class="field-name">Assigned to : </label>
+								<label class="field-val" id="cardAssignedTo">Roman Artemenko</label>
+							</form>
+						</div>
+					</div>
+
+					<div class="form-group decription">
+						<label class="decription" for="cardDescription"><strong>Description : </strong></label>
+						<textarea class="form-control textarea" id="cardDescription" rows="10" readonly></textarea>
+					</div>
+
+					<span class="close">×</span>
+				</div>
 
 		</div>
 
