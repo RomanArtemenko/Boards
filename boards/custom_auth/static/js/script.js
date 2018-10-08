@@ -153,6 +153,51 @@ $(function () {
 	    }
 	});
 
+    // New Card
+	$('#btnNewCard').click(function () {
+        window.location.hash = '#card/new';
+	});
+
+    // Save Card
+//	$('#btnSaveNewCard').click();
+
+	function saveNewCard() {
+        var title = $('#inputCardTitle').val(),
+            assignedTo = null,
+            dueDate = '2000-01-01 00:00:00+01',
+            description = $('#cardDescription').val();
+
+
+        $.ajax({
+            type: "POST",
+            url: "/manage/card/",
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
+            },
+            data: JSON.stringify({
+                "title": title,
+                "description": description,
+                "assigned_to": assignedTo,
+                "due_date": dueDate
+            }),
+            contentType: "application/json",
+            cache: false,
+            async: false,
+            success: function(data){
+                console.log(data);
+                window.location.hash = '#';
+            },
+            error: function(xhr){
+                $('#cardErr').html(xhr.responseText);
+            }
+        });
+
+	}
+
+	function saveChangesCard() {
+	    alert('Save changes in current card...');
+	}
+
 
 	var checkboxes = $('.all-products input[type=checkbox]');
 
@@ -255,7 +300,7 @@ $(function () {
 			var clicked = $(e.target);
 
 			// If the close button or the background are clicked go to the previous page.
-			if (clicked.hasClass('close') || clicked.hasClass('overlay')) {
+			if (clicked.hasClass('close') || clicked.hasClass('overlay') || clicked.hasClass('btn-close')) {
 				// Change the url hash with the last used filters.
 				createQueryHash(filters);
 			}
@@ -547,24 +592,47 @@ $(function () {
 
 	function renderSingleCardPage(index, data){
 
-		var page = $('.single-card'),
-			container = $('.preview-large');
+        var page = $('.single-card'),
+            container = $('.preview-large');
 
-		if(myCards.length){
-			myCards.forEach(function (item) {
-				if(item.id == index){
-                    $('#cardTitle').html('#' + item.id + ' ' + item.title);
-                    $('#cardOwner').val(userName(item.owner_repr));
-                    $('#cardStatus').html(item.status_repr.name);
-                    $('#cardCreateDate').val(cardDate(item,'created'));
-                    $('#cardAssignedTo').html(assignedUser(userName(item.assigned_to_repr)));
-                    $('#cardDescription').val(item.description);
-				}
-			});
-		}
+        $('#btnSaveNewCard').unbind('click');
 
-		// Show the page.
-		page.addClass('visible');
+        if (index == 'new') {
+            $('#cardTitle').hide()
+            $('#inputTitle').show()
+
+//            $('#cardTitle').html('New card');
+            $('#cardOwner').val(userName(JSON.parse(localStorage.getItem('User'))));
+
+            //Set hendler for Save button
+
+            $('#btnSaveNewCard').on('click', saveNewCard);
+
+
+        } else {
+
+            if(myCards.length){
+                myCards.forEach(function (item) {
+                    if(item.id == index){
+                        $('#cardTitle').html('#' + item.id + ' ' + item.title);
+                        $('#cardOwner').val(userName(item.owner_repr));
+                        $('#cardStatus').val(item.status_repr.name);
+                        $('#cardCreatedDate').val(cardDate(item,'created'));
+                        $('#cardAssignedTo').val(assignedUser(userName(item.assigned_to_repr)));
+                        $('#cardDescription').val(item.description);
+
+                        $('#btnSaveNewCard').on('click', saveChangesCard);
+                        $('#cardTitle').show();
+                        $('#inputTitle').hide();
+                    }
+                });
+            }
+
+
+        }
+
+        // Show the page.
+        page.addClass('visible');
 
 	}
 

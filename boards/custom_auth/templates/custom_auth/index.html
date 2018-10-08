@@ -56,7 +56,7 @@
 
 					<span>MAIN MENU</span>
 
-					<button type="button" class="btn btn-success">New Card</button>
+					<button id="btnNewCard" type="button" class="btn btn-success">New Card</button>
 
 					<ul id="myUL">
 					  <li><span id="mycards">My Cards</span></li>
@@ -144,6 +144,12 @@
 				<div class="preview-large">
 					<div class="card-head">
 						<label id="cardTitle"><h4>#123 Adding some changes</h4></label>
+						<form class="form-inline">
+							<div id="inputTitle" class="form-group">
+								<label class="field-name col-sm" for="inputCardTitle">Title : </label>
+							<input type="text" class="form-control" id="inputCardTitle" value="" size="65">
+							</div>
+						</form>
 					</div>
 
 					<div class="row">
@@ -151,34 +157,63 @@
 							<form class="form-inline">
 								<div class="form-group">
 									<label class="field-name" for="cardOwner">Createt by : </label>
-									<input type="text" class="form-control" id="cardOwner" value="Jane Doe" readonly>
+									<input type="text" class="form-control" id="cardOwner" value="" readonly>
 								</div>
 							</form>
 						</div>
 						<div class="col">
-							<label class="field-name">Status : </label>
-							<label class="field-val" id="cardStatus">New</label>
+							<!--<label class="field-name">Status : </label>-->
+							<!--<label class="field-val" id="cardStatus">New</label>-->
+
+							<form class="form-inline">
+								<div class="form-group">
+									<label class="field-name" for="cardStatus">Status : </label>
+									<input type="text" class="form-control" id="cardStatus" value="New" readonly>
+								</div>
+							</form>
 						</div>
 						<div class="w-100"></div>
 						<div class="col">
 							<form class="form-inline">
 								<div class="form-group">
 									<label class="field-name" for="cardCreatedDate">Created date : </label>
-									<input type="text" class="form-control" id="cardCreatedDate" value="2018-10-01 08:30:00" readonly>
+									<input type="text" class="form-control" id="cardCreatedDate" value="X" readonly>
 								</div>
 							</form>
 						</div>
 						<div class="col">
+							<!--<form class="form-inline">-->
+								<!--<label class="field-name">Assigned to : </label>-->
+								<!--<label class="field-val" id="cardAssignedTo">Roman Artemenko</label>-->
+							<!--</form>-->
+
 							<form class="form-inline">
-								<label class="field-name">Assigned to : </label>
-								<label class="field-val" id="cardAssignedTo">Roman Artemenko</label>
+								<div class="form-group">
+									<label class="field-name" for="cardAssignedTo">Createt by : </label>
+									<input type="text" class="form-control" id="cardAssignedTo" value="New User" list="assignedToList">
+									<datalist id="assignedToList">
+										<option value="Test User1">
+										  <option value="Tuta User2">
+										  <option value="Lo Chun">
+										  <option value="Test Rs">
+										  <option value="Sdswd Uad">
+									</datalist>
+								</div>
 							</form>
 						</div>
 					</div>
 
 					<div class="form-group decription">
 						<label class="decription" for="cardDescription"><strong>Description : </strong></label>
-						<textarea class="form-control textarea" id="cardDescription" rows="10" readonly></textarea>
+						<textarea class="form-control textarea" id="cardDescription" rows="8"></textarea>
+					</div>
+
+					<div id="cardErr">
+					</div>
+
+					<div>
+						<button id="btnSaveNewCard" type="button" class="btn btn-danger">Save</button>
+						<button id="btnCancel" type="button" class="btn btn-secondary btn-close">Cancel</button>
 					</div>
 
 					<span class="close">×</span>
