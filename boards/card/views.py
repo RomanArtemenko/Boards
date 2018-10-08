@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from .models import Card, Status, Role
-from .serializers import CardSerializer, RoleSerializer, StatusSerializer
+from .serializers import CardSerializer, RoleSerializer, StatusSerializer, CardCreateSerializer
 
 # Create your views here.
 
@@ -36,6 +36,12 @@ class CardViewSet(viewsets.ModelViewSet):
             return self.queryset.filter(owner=self.request.user)
 
         return self.queryset
+
+    def get_serializer_class(self):
+        if self.action == 'metadata':
+            return CardCreateSerializer
+
+        return self.serializer_class
 
 
 class RoleViewSet(viewsets.mixins.CreateModelMixin,

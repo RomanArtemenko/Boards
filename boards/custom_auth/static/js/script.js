@@ -81,6 +81,42 @@ $(function () {
     }
 
 
+
+    function getAssignedTo() {
+        $.ajax({
+            type: "OPTIONS",
+            url: "/manage/card/",
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
+            },
+            contentType: "application/json",
+            cache: false,
+            success: function(data){
+                assignedTo = data;
+                console.log(data);
+                renderAssignedTo(data);
+            },
+            error: function(xhr){
+                console.log(xhr);
+            }
+        });
+    }
+
+    function renderAssignedTo(data) {
+        var item;
+        var listAssignedTo = data.actions.POST.assigned_to.choices;
+
+        $('#assignedToList > option').remove();
+
+        for(item = 0; item < listAssignedTo.length; item++) {
+            row = '<option value="' + listAssignedTo[item].display_name + '" data-value="' + listAssignedTo[item].value + '">';
+
+            $('#assignedToList').append(row);
+        }
+
+    }
+
+
     // Login
 	$('#btnSignIn').click(function () {
 
@@ -595,6 +631,8 @@ $(function () {
         var page = $('.single-card'),
             container = $('.preview-large');
 
+        getAssignedTo();
+
         $('#btnSaveNewCard').unbind('click');
 
         if (index == 'new') {
@@ -618,7 +656,7 @@ $(function () {
                         $('#cardOwner').val(userName(item.owner_repr));
                         $('#cardStatus').val(item.status_repr.name);
                         $('#cardCreatedDate').val(cardDate(item,'created'));
-                        $('#cardAssignedTo').val(assignedUser(userName(item.assigned_to_repr)));
+//                        $('#cardAssignedTo').val(assignedUser(userName(item.assigned_to_repr)));
                         $('#cardDescription').val(item.description);
 
                         $('#btnSaveNewCard').on('click', saveChangesCard);
