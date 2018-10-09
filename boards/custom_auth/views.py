@@ -172,4 +172,5 @@ class UserInfo(viewsets.mixins.ListModelMixin ,viewsets.GenericViewSet):
     def list(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
+
         return Response(serializer.data)

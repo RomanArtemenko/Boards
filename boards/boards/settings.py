@@ -64,7 +64,8 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-    )
+    ),
+    'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata'
 }
 
 TEMPLATES = [
@@ -140,6 +141,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/home/user/Документы/boards/static/'
 
 try:
     from .social_config import OAUTH_CREDENTIALS
