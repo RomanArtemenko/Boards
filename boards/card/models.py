@@ -17,10 +17,13 @@ class Status(models.Model):
         default=False,
     )
 
-    # def get_default_status():
-    #     instance = Status.objects.get(is_default=True)
-    #     return instance
+    def get_default_status():
+        try:
+            instance = Status.objects.get(is_default=True)
+        except:
+            instance = None
 
+        return instance
 
 
 class Role(models.Model):
@@ -47,6 +50,7 @@ class Card(models.Model):
     status = models.ForeignKey(
         Status,
         on_delete=models.PROTECT,
-        # default=Status.get_default_status(),
+        default=Status.get_default_status(),
+        blank=True,
     )
     role = models.ManyToManyField(Role, blank=True)
