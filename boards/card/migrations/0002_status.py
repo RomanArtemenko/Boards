@@ -8,8 +8,8 @@ import os
 
 def load_data(apps, schema_editor):
 
-    print('>>>>>>>>> CUR DIR : %s' % os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    file_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    print('>>>>>>>>> CUR DIR : %s' % os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    file_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     print('>>>> FILE PATH : %s' % file_path)
     file_name = 'status_data.json'
 
