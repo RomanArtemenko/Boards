@@ -17,9 +17,9 @@ class Status(models.Model):
         default=False,
     )
 
-    def get_default_status():
-        instance = Status.objects.get(is_default=True)
-        return instance
+    # def get_default_status():
+    #     instance = Status.objects.get(is_default=True)
+    #     return instance
 
 
 
