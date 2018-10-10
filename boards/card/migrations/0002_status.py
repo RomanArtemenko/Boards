@@ -8,9 +8,9 @@ import os
 
 def load_data(apps, schema_editor):
 
-    print('>>>>>>>>> CUR DIR : %s' % os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    # print('>>>>>>>>> CUR DIR : %s' % os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
     file_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    print('>>>> FILE PATH : %s' % file_path)
+    # print('>>>> FILE PATH : %s' % file_path)
     file_name = 'status_data.json'
 
     with open(os.path.join(file_path, file_name)) as f:
@@ -21,7 +21,7 @@ def load_data(apps, schema_editor):
     for item in data:
         Status.objects.create(id=item.get("id"),
                               name=item.get("fields").get("name"),
-                              is_active=item.get("fields").get("is_actuve"),
+                              is_active=item.get("fields").get("is_active"),
                               order_num=item.get("fields").get("order_num"),
                               is_default=item.get("fields").get("is_default"))
 
