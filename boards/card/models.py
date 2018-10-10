@@ -22,6 +22,7 @@ class Status(models.Model):
         return instance
 
 
+
 class Role(models.Model):
     name = models.CharField(max_length=20, unique=True)
 
@@ -46,6 +47,6 @@ class Card(models.Model):
     status = models.ForeignKey(
         Status,
         on_delete=models.PROTECT,
-        default=Status.get_default_status(),
+        # default=Status.get_default_status(),
     )
     role = models.ManyToManyField(Role, blank=True)
