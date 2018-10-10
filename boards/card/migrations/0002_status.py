@@ -21,9 +21,9 @@ def load_data(apps, schema_editor):
     for item in data:
         Status.objects.create(id=item.get("id"),
                               name=item.get("fields").get("name"),
-                              is_active=bool(item.get("fields").get("is_active")),
+                              is_actuve=item.get("fields").get("is_actuve"),
                               order_num=item.get("fields").get("order_num"),
-                              is_default=bool(item.get("fields").get("is_default")))
+                              is_default=item.get("fields").get("is_default"))
 
 
 
