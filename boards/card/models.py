@@ -51,6 +51,5 @@ class Card(models.Model):
         Status,
         on_delete=models.PROTECT,
         default=Status.get_default_status(),
-        blank=True,
     )
     role = models.ManyToManyField(Role, blank=True)
