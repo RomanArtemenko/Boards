@@ -4,11 +4,16 @@ from django.db import migrations, models
 import json
 import os
 
+
+
 def load_data(apps, schema_editor):
 
     print('>>>>>>>>> CUR DIR : %s' % os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
+    print('>>>> FILE PATH : %s' % file_path)
+    file_name = 'status_data.json'
 
-    with open('status_data.json') as f:
+    with open(os.path.join(file_path, file_name)) as f:
         data = json.load(f)
 
     Status = apps.get_model('card', 'Status')
