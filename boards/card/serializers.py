@@ -44,7 +44,11 @@ class CardSerializer(serializers.ModelSerializer):
 
 
 class CardCreateSerializer(serializers.ModelSerializer):
-    assigned_to = serializers.ChoiceField(choices=[(u.id, u.full_name) for u in User.objects.all().annotate(full_name=Concat('first_name', V(" "), 'last_name'))], allow_null=True)
+    # assigned_to = serializers.ChoiceField(
+    #     choices=[(u.id, u.full_name) for u in User.objects.all().annotate(
+    #         full_name=Concat('first_name', V(" "), 'last_name'))],
+    #     allow_null=True
+    # )
     assigned_to_repr = UserLiteSerializer(source='assigned_to', read_only=True)
     owner = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), allow_null=True, required=False)
     owner_repr = UserLiteSerializer(source='owner', read_only=True, allow_null=True)
@@ -55,5 +59,5 @@ class CardCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Card
-        fields = ('id', 'title', 'description', 'assigned_to', 'assigned_to_repr','due_date',
+        fields = ('id', 'title', 'description', 'assigned_to_repr','due_date',
                   'owner', 'owner_repr', 'status', 'status_repr', 'role', 'role_repr', 'created_date')
