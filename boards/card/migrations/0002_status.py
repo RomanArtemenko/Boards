@@ -2,8 +2,11 @@
 
 from django.db import migrations, models
 import json
+import os
 
 def load_data(apps, schema_editor):
+
+    print('>>>>>>>>> CUR DIR : %s' % os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
     with open('status_data.json') as f:
         data = json.load(f)
