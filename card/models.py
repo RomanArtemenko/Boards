@@ -19,7 +19,7 @@ class Status(models.Model):
 
     def get_default_status():
         try:
-            instance = Status.objects.get(is_default=True)
+            instance = Status.objects.get(is_default=True).id
         except:
             instance = None
 

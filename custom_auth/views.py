@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
@@ -19,6 +20,9 @@ from boards.settings import OAUTH_CREDENTIALS
 import urllib
 import requests
 User = get_user_model()
+
+
+
 
 # Create your views here.
 
@@ -117,13 +121,17 @@ class SignInFacebookView(View):
     authorize_url = 'https://www.facebook.com/v3.1/dialog/oauth?'
 
     clint_id = OAUTH_CREDENTIALS['facebook']['id']
+    site = Site.objects.get_current()
+
+    relaive_redirect_path = '/auth/facebook/redirect'
 
     authorize_vars = {
         'client_id': clint_id,
         'redirect_uri':
-        '/auth/facebook/redirect',
-        # 'http://localhost:8000/auth/facebook/redirect',
-        # 'http://localhost:8000',
+        urllib.parse.urljoin(
+            'https:// %s' % site.domain,
+            relaive_redirect_path
+        ),
         'response_type': 'code',
         'scope': 'email'
     }
@@ -136,24 +144,6 @@ class SignInFacebookView(View):
 
 class FacebookRedirectView(View):
     template_name = "custom_auth/fb_redirect.html"
-    # clint_id = OAUTH_CREDENTIALS['facebook']['id']
-    # secret_key = OAUTH_CREDENTIALS['facebook']['secret']
-    # access_url = 'https://graph.facebook.com/v3.1/oauth/access_token?'
-    # access_vars = {
-    #     'client_id': clint_id,
-    #     'redirect_uri': 'http://localhost:8000/auth/facebook/redirect',
-    #     'client_secret': secret_key,
-    #     'code': ''
-    # }
-    # info_url = 'https://graph.facebook.com/v3.1/me?'
-    # info_vars = {
-    #     'access_token': '',
-    #     'fields': 'id,name,last_name,first_name,email',
-    #     'format': 'json',
-    #     'method': 'get',
-    #     'pretty': '0',
-    #     'suppress_http_code': '1'
-    # }
 
     def get(self, request, *args, **kwargs):
         if 'code' not in request.GET:
