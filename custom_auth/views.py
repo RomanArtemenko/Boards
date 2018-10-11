@@ -121,7 +121,8 @@ class SignInFacebookView(View):
     authorize_vars = {
         'client_id': clint_id,
         'redirect_uri':
-        'http://localhost:8000/auth/facebook/redirect',
+        '/auth/facebook/redirect',
+        # 'http://localhost:8000/auth/facebook/redirect',
         # 'http://localhost:8000',
         'response_type': 'code',
         'scope': 'email'
