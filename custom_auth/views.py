@@ -147,7 +147,7 @@ class FacebookRedirectView(View):
 
     def get(self, request, *args, **kwargs):
         if 'code' not in request.GET:
-            return redirect('main')
+            return redirect('index')
 
         return render(request, self.template_name)
 
