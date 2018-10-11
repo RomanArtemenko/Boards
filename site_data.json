@@ -1,0 +1,26 @@
+[
+{
+    "model": "sites.site",
+    "pk": 1,
+    "fields": {
+        "domain": "example.com",
+        "name": "example.com"
+    }
+},
+{
+    "model": "sites.site",
+    "pk": 2,
+    "fields": {
+        "domain": "fathomless-caverns-59999.herokuapp.com",
+        "name": "fathomless-caverns-59999.herokuapp.com"
+    }
+},
+{
+    "model": "sites.site",
+    "pk": 3,
+    "fields": {
+        "domain": "localhost:8000",
+        "name": "localhost:8000"
+    }
+}
+]
