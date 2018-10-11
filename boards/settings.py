@@ -27,7 +27,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'fathomless-caverns-59999.herokuapp.com']
 
-SITE_ID = 2
+SITE_ID = 3
 
 # Application definition
 

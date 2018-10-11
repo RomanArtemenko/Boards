@@ -31,7 +31,6 @@ $(function () {
 
      initLogin();
 
-
 	//	Event handlers for frontend navigation
 
 	//	Loading ny cards
@@ -119,6 +118,8 @@ $(function () {
 
     // Login
 	$('#btnSignIn').click(function () {
+
+	alert(window.host.origin);
 
         $.ajax({
             type: "POST",

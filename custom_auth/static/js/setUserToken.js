@@ -22,6 +22,8 @@ $(document).ready(function(){
         return window.location.origin
     }
 
+    alert(getSiteRoot());
+
     var code = getCode(url);
 
     $.ajax({
