@@ -119,8 +119,6 @@ $(function () {
     // Login
 	$('#btnSignIn').click(function () {
 
-	alert(window.host.origin);
-
         $.ajax({
             type: "POST",
             url: "/signin/",
