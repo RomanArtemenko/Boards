@@ -18,6 +18,10 @@ $(document).ready(function(){
         return url.split("code=")[1].split('#')[0]
     }
 
+    function getSiteRoot() {
+        return window.location.origin
+    }
+
     var code = getCode(url);
 
     $.ajax({
@@ -26,7 +30,7 @@ $(document).ready(function(){
         data: JSON.stringify({
             "provider": "facebook",
             "code": code,
-            "redirect_uri": "http://localhost:8000/auth/facebook/redirect"
+            "redirect_uri":  getSiteRoot() + "/auth/facebook/redirect"
         }),
         complete: function(){
             window.location.href = "/";
