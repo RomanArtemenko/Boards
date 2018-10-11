@@ -121,17 +121,17 @@ class SignInFacebookView(View):
     authorize_url = 'https://www.facebook.com/v3.1/dialog/oauth?'
 
     clint_id = OAUTH_CREDENTIALS['facebook']['id']
-    # site = Site.objects.get_current()
+    site = Site.objects.get_current()
 
     relaive_redirect_path = '/auth/facebook/redirect'
 
     authorize_vars = {
         'client_id': clint_id,
-        # 'redirect_uri':
-        # urllib.parse.urljoin(
-        #     'https://%s' % site.domain,
-        #     relaive_redirect_path
-        # ),
+        'redirect_uri':
+        urllib.parse.urljoin(
+            'https://%s' % site.domain,
+            relaive_redirect_path
+        ),
         'response_type': 'code',
         'scope': 'email'
     }
