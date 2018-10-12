@@ -27,7 +27,7 @@ DEBUG = bool( os.environ.get('DEBUG', False) )
 # DEBUG = False
 print('>>>> DEBUG : %s' % DEBUG)
 
-ALLOWED_HOSTS = ['fathomless-caverns-59999.herokuapp.com', '127.0.0.1',  'localhost']
+ALLOWED_HOSTS = ['fathomless-caverns-59999.herokuapp.com','www.fathomless-caverns-59999.herokuapp.com' ,'127.0.0.1',  'localhost']
 
 SITE_ID = os.environ.get('CURRENT_SITE', 3)
 
