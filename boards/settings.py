@@ -32,6 +32,8 @@ ALLOWED_HOSTS = ['fathomless-caverns-59999.herokuapp.com','www.fathomless-cavern
 
 SITE_ID = os.environ.get('CURRENT_SITE', 3)
 
+print('>>> SITE_ID : %s' % SITE_ID)
+
 # Application definition
 
 INSTALLED_APPS = [
