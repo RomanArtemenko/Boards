@@ -23,9 +23,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '9i=qmgy5-8c&i)2aqfr!9i1z1el+1han%76t+&2c9=(pto$h=*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool( os.environ.get('DJANGO_DEBUG', False) )
-# DEBUG = False
+# DEBUG = bool( os.environ.get('DJANGO_DEBUG', False) )
+DEBUG = False
 print('>>>> DEBUG : %s' % DEBUG)
+
+try:
+    print('>>>> DJANGO_DEBUG : %s' % DJANGO_DEBUG)
+except:
+    print('>>>> DJANGO_DEBUG : %s' % 'DOES NOT EXIST')
+
 ALLOWED_HOSTS = ['127.0.0.1', 'fathomless-caverns-59999.herokuapp.com', 'localhost']
 
 SITE_ID = os.environ.get('CURRENT_SITE', 3)
@@ -143,13 +149,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, 'static'),
-# )
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 try:
     from .social_config import OAUTH_CREDENTIALS
