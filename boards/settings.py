@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '9i=qmgy5-8c&i)2aqfr!9i1z1el+1han%76t+&2c9=(pto$h=*'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool( os.environ.get('DJANGO_DEBUG', True) )
+DEBUG = bool( os.environ.get('DJANGO_DEBUG', False) )
 
 ALLOWED_HOSTS = ['fathomless-caverns-59999.herokuapp.com','127.0.0.1', 'localhost']
 
