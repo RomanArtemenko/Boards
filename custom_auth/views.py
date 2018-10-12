@@ -129,7 +129,7 @@ class SignInFacebookView(View):
         'client_id': clint_id,
         'redirect_uri':
         urllib.parse.urljoin(
-            'http://%s' % site.domain,
+            'https://%s' % site.domain,
             relaive_redirect_path
         ),
         'response_type': 'code',
