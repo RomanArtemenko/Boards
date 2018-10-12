@@ -1,4 +1,6 @@
+from django.core.exceptions import EmptyResultSet
 from django.db import models
+from django.db.utils import OperationalError
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -20,7 +22,7 @@ class Status(models.Model):
     def get_default_status():
         try:
             instance = Status.objects.get(is_default=True).id
-        except:
+        except (EmptyResultSet, OperationalError,):
             instance = None
 
         return instance

@@ -1,3 +1,4 @@
+from django.db.utils import OperationalError
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
@@ -121,7 +122,10 @@ class SignInFacebookView(View):
     authorize_url = 'https://www.facebook.com/v3.1/dialog/oauth?'
 
     clint_id = OAUTH_CREDENTIALS['facebook']['id']
-    site = Site.objects.get_current()
+    try:
+        site = Site.objects.get_current()
+    except OperationalError:
+        raise OperationalError('Maybe table does not exist or empty yet')
 
     relaive_redirect_path = '/auth/facebook/redirect'
 

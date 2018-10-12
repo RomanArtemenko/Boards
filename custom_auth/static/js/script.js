@@ -68,10 +68,10 @@ $(function () {
         for(card = 0; card < data.length; card++) {
             row = '<tr>'+
                   '<th scope="row"><a href="/#card/' + data[card].id + '">' + data[card].id  + '</a></th>' +
-                  '<td>' + data[card].status_repr.name + '</td>' +
+                  '<td>' + data[card].status.name + '</td>' +
                   '<td>' + data[card].title + '</td>' +
                   '<td>' + cardDate(data[card], 'created') + '</td>' +
-                  '<td>' + userName(data[card].assigned_to_repr) + '</td>' +
+                  '<td>' + userName(data[card].assigned_to) + '</td>' +
                   '</tr>';
 
             $('#tableMyCards > tbody:last-child').append(row);
@@ -652,8 +652,8 @@ $(function () {
                 myCards.forEach(function (item) {
                     if(item.id == index){
                         $('#cardTitle').html('#' + item.id + ' ' + item.title);
-                        $('#cardOwner').val(userName(item.owner_repr));
-                        $('#cardStatus').val(item.status_repr.name);
+                        $('#cardOwner').val(userName(item.owner));
+                        $('#cardStatus').val(item.status.name);
                         $('#cardCreatedDate').val(cardDate(item,'created'));
 //                        $('#cardAssignedTo').val(assignedUser(userName(item.assigned_to_repr)));
                         $('#cardDescription').val(item.description);

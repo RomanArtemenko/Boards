@@ -29,35 +29,29 @@ class RoleSerializer(serializers.ModelSerializer):
 
 
 class CardSerializer(serializers.ModelSerializer):
-    assigned_to = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), allow_null=True)
-    assigned_to_repr = UserLiteSerializer(source='assigned_to', read_only=True)
-    owner = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), allow_null=True, required=False)
-    owner_repr = UserLiteSerializer(source='owner', read_only=True, allow_null=True)
-    status = serializers.PrimaryKeyRelatedField(queryset=Status.objects.all(), allow_null=True, required=False)
-    status_repr = StatusSerializer(source='status', read_only=True, allow_null=True)
-    role_repr = RoleSerializer(source='role', read_only=True, many=True)
+    assigned_to = UserLiteSerializer(read_only=True, allow_null=True)
+    owner = UserLiteSerializer(read_only=True)
+    status = StatusSerializer(read_only=True, allow_null=True)
+    role = RoleSerializer(read_only=True, many=True)
 
     class Meta:
         model = Card
-        fields = ('id', 'title', 'description', 'assigned_to', 'assigned_to_repr','due_date',
-                  'owner', 'owner_repr', 'status', 'status_repr', 'role_repr', 'created_date')
+        fields = ('id', 'title', 'description', 'due_date',
+                  'owner', 'status', 'role', 'created_date', 'assigned_to')
 
 
 class CardCreateSerializer(serializers.ModelSerializer):
-    assigned_to = serializers.ChoiceField(
-        choices=[(u.id, u.full_name) for u in User.objects.all().annotate(
-            full_name=Concat('first_name', V(" "), 'last_name'))],
-        allow_null=True
-    )
-    assigned_to_repr = UserLiteSerializer(source='assigned_to', read_only=True)
+    assigned_to = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), allow_null=True)
     owner = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), allow_null=True, required=False)
-    owner_repr = UserLiteSerializer(source='owner', read_only=True, allow_null=True)
-    status = serializers.ChoiceField(choices=[(s.id, s.name) for s in Status.objects.all()])
-    status_repr = StatusSerializer(source='status', read_only=True, allow_null=True)
-    role = serializers.ChoiceField(choices=[(r.id, r.name) for r in Role.objects.all()])
-    role_repr = RoleSerializer(source='role', read_only=True, many=True)
+    status = serializers.PrimaryKeyRelatedField(queryset=Status.objects.all(), allow_null=True, required=False)
+    # assigned_to_repr = UserLiteSerializer(source='assigned_to', read_only=True)
+    # owner_repr = UserLiteSerializer(source='owner', read_only=True, allow_null=True)
+    # status = serializers.ChoiceField(choices=[(s.id, s.name) for s in Status.objects.all()])
+    # status_repr = StatusSerializer(source='status', read_only=True, allow_null=True)
+    # role = serializers.ChoiceField(choices=[(r.id, r.name) for r in Role.objects.all()])
+    # role_repr = RoleSerializer(source='role', read_only=True, many=True)
 
     class Meta:
         model = Card
-        fields = ('id', 'title', 'description', 'assigned_to', 'assigned_to_repr','due_date',
-                  'owner', 'owner_repr', 'status', 'status_repr','role', 'role_repr', 'created_date')
+        fields = ('id', 'title', 'description', 'assigned_to', 'due_date',
+                  'owner', 'status' ,'role')

@@ -11,28 +11,39 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import dj_database_url
+import django_heroku
+from .settings_local import SECRET_KEY, ADMINS
+from .settings_local import EMAIL_HOST, EMAIL_HOST_PASSWORD, EMAIL_HOST_USER,\
+    EMAIL_PORT, EMAIL_USE_TLS
+from .settings_local import SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS, \
+    SOCIAL_AUTH_FACEBOOK_AUTH_EXTRA_ARGUMENTS, SOCIAL_AUTH_FACEBOOK_KEY, \
+    SOCIAL_AUTH_FACEBOOK_LOGIN_URL, SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS, \
+    SOCIAL_AUTH_FACEBOOK_SCOPE, SOCIAL_AUTH_FACEBOOK_SECRET, SOCIAL_AUTH_LOGIN_REDIRECT_URL
+
+
+try:
+    from .social_config import OAUTH_CREDENTIALS
+except ImportError:
+    raise ImportError("social_config.py not found")
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-ADMINS = (('Romanm', 'AnonimFakeov@gmail.com'),)
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '9i=qmgy5-8c&i)2aqfr!9i1z1el+1han%76t+&2c9=(pto$h=*'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool( os.environ.get('DEBUG', False) )
+DEBUG = bool(os.environ.get('DEBUG', True))
 
-print('>>>> DEBUG : %s' % DEBUG)
-
-ALLOWED_HOSTS = ['fathomless-caverns-59999.herokuapp.com','www.fathomless-caverns-59999.herokuapp.com' ,'127.0.0.1',  'localhost']
+ALLOWED_HOSTS = [
+    'fathomless-caverns-59999.herokuapp.com',
+    'www.fathomless-caverns-59999.herokuapp.com',
+    '127.0.0.1',
+    'localhost'
+]
 
 SITE_ID = os.environ.get('CURRENT_SITE', 3)
-
-print('>>> SITE_ID : %s' % SITE_ID)
 
 # Application definition
 
@@ -110,7 +121,12 @@ DATABASES = {
         'PORT': '',
     }
 }
-
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -158,35 +174,13 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-try:
-    from .social_config import OAUTH_CREDENTIALS
-except:
-    raise ImportError("social_config.py not found")
-
-# REST_SOCIAL_OAUTH_REDIRECT_URI = 'xxx'
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'xxx'
-SOCIAL_AUTH_FACEBOOK_LOGIN_URL = 'xxx'
 LOGIN_REDIRECT_URL = 'xxx'
 
 AUTH_USER_MODEL = 'custom_auth.CustomUser'
 # SOCIAL_AUTH_USER_MODEL = AUTH_USER_MODEL
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'AnonimFakeov@gmail.com'
-EMAIL_HOST_PASSWORD = 'Vice2014Versa'
-EMAIL_PORT = 587
 
 ACCOUNT_ACTIVATION_DAYS = 7
-
-# SOCIAL_AUTH_FACEBOOK_API_VERSION = '3.1'
-SOCIAL_AUTH_FACEBOOK_KEY = '475548252848714'
-SOCIAL_AUTH_FACEBOOK_SECRET = 'cee11fad8d56de9a195052d9371a9a79'
-SOCIAL_AUTH_FACEBOOK_SCOPE = ['email',]
-SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-    'fields': 'id,name,email',
-}
-SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['email', 'username', 'first_name', 'last_name']
 
 # SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
@@ -195,11 +189,8 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-SOCIAL_AUTH_FACEBOOK_AUTH_EXTRA_ARGUMENTS = {'display': 'touch'}
 
-import dj_database_url
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
-import django_heroku
 django_heroku.settings(locals())
