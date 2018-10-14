@@ -21,7 +21,7 @@ class Status(models.Model):
 
     def get_default_status():
         try:
-            instance = Status.objects.get(is_default=True).id
+            instance = Status.objects.get(is_default=True)
         except (EmptyResultSet, OperationalError,):
             instance = None
 

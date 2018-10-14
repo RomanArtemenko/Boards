@@ -115,17 +115,27 @@ class FBRedirect(View):
     def get(self, request, *arg, **kwargs):
         return render(request, self.template_name, *arg, **kwargs)
 
+class Facebook():
+    def __init__(self):
+        pass
+
 
 class SignInFacebookView(View):
+
+    def __init__(self):
+        pass
+
     template_name = "custom_auth/sign_in_facebook.html"
     errors = []
+
     authorize_url = 'https://www.facebook.com/v3.1/dialog/oauth?'
 
     clint_id = OAUTH_CREDENTIALS['facebook']['id']
     try:
         site = Site.objects.get_current()
     except OperationalError:
-        raise OperationalError('Maybe table does not exist or empty yet')
+        site = None
+        raise ValueError('Maybe table does not exist or empty yet')
 
     relaive_redirect_path = '/auth/facebook/redirect'
 

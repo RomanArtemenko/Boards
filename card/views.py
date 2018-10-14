@@ -40,8 +40,8 @@ class CardViewSet(viewsets.ModelViewSet):
         return self.queryset
 
     def get_serializer_class(self):
-        # if self.action == 'metadata':
-        #     return CardCreateSerializer
+        if self.action == 'metadata':
+            return CardCreateSerializer
 
         return self.serializer_class
 

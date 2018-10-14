@@ -3,6 +3,8 @@ from django.db.models.functions import Concat
 from django.db.models import Value as V
 from rest_framework import serializers
 from .models import Card, Status, Role
+from django.core.exceptions import EmptyResultSet
+from django.db.utils import OperationalError
 
 User = get_user_model()
 
@@ -40,16 +42,43 @@ class CardSerializer(serializers.ModelSerializer):
                   'owner', 'status', 'role', 'created_date', 'assigned_to')
 
 
+class ChoiceLoader():
+
+    def __init__(self, model, fields=None, methods=None):
+
+        if fields is None:
+            fields = []
+
+        if methods is None:
+            methods = []
+
+        if len(fields+methods) != 2:
+            raise ValueError('Incorect parametr count!')
+
+        try:
+            self._data = [
+                [getattr(item, field) for field in fields]+
+                [getattr(item, method)() for method in methods]
+                for item in model.objects.all()
+            ]
+        except (AttributeError, EmptyResultSet, OperationalError):
+            self._data = []
+
+    def get_data(self):
+        return list(self._data)
+
+
 class CardCreateSerializer(serializers.ModelSerializer):
-    assigned_to = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), allow_null=True)
-    owner = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), allow_null=True, required=False)
-    status = serializers.PrimaryKeyRelatedField(queryset=Status.objects.all(), allow_null=True, required=False)
-    # assigned_to_repr = UserLiteSerializer(source='assigned_to', read_only=True)
-    # owner_repr = UserLiteSerializer(source='owner', read_only=True, allow_null=True)
-    # status = serializers.ChoiceField(choices=[(s.id, s.name) for s in Status.objects.all()])
-    # status_repr = StatusSerializer(source='status', read_only=True, allow_null=True)
-    # role = serializers.ChoiceField(choices=[(r.id, r.name) for r in Role.objects.all()])
-    # role_repr = RoleSerializer(source='role', read_only=True, many=True)
+
+    assigned_to = serializers.ChoiceField(choices=ChoiceLoader(
+        User, ['id'], ['get_full_name']
+    ).get_data())
+    status = serializers.ChoiceField(choices=ChoiceLoader(
+        Status, ['id', 'name']
+    ).get_data())
+    role = serializers.ChoiceField(choices=ChoiceLoader(
+        Role, ['id', 'name']
+    ).get_data())
 
     class Meta:
         model = Card
