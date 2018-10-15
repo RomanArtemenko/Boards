@@ -1,6 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.db.models.functions import Concat
-from django.db.models import Value as V
 from rest_framework import serializers
 from .models import Card, Status, Role
 from django.core.exceptions import EmptyResultSet
@@ -57,7 +55,7 @@ class ChoiceLoader():
 
         try:
             self._data = [
-                [getattr(item, field) for field in fields]+
+                [getattr(item, field) for field in fields] +
                 [getattr(item, method)() for method in methods]
                 for item in model.objects.all()
             ]
@@ -83,4 +81,4 @@ class CardCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
         fields = ('id', 'title', 'description', 'assigned_to', 'due_date',
-                  'owner', 'status' ,'role')
+                  'owner', 'status', 'role')

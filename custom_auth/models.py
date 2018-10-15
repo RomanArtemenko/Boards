@@ -52,9 +52,12 @@ class CustomUserManager(UserManager):
     def _default_pass(self):
         pas = ''
         for x in range(16):
-            pas = pas + random.choice(list('1234567890abcdefghigklmnopqrstuvyxwzABCDEFGHIGKLMNOPQRSTUVYXWZ'))
+            pas = pas + random.choice(
+                list('1234567890abcdefghigklmnopqrstuvyxwzABCDEFGHIGKLMNOPQRSTUVYXWZ')
+            )
 
         return pas
+
 
 class CustomUser(AbstractUser):
     username_validator = UnicodeUsernameValidator()
@@ -80,12 +83,12 @@ class CustomUser(AbstractUser):
     class Meta(AbstractUser.Meta):
         swappable = 'AUTH_USER_MODEL'
 
+
 class Profile(models.Model):
     user = models.OneToOneField(
         CustomUser,
         on_delete=models.CASCADE,
         primary_key=True
     )
-    phone_number = models.CharField(max_length=10,default='')
+    phone_number = models.CharField(max_length=10, default='')
     notification = models.BooleanField(default=True)
-

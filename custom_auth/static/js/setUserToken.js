@@ -18,11 +18,11 @@ $(document).ready(function(){
         return url.split("code=")[1].split('#')[0]
     }
 
-//    function getSiteRoot() {
-//        return window.location.origin
-//    }
+    function getSiteRoot() {
+        return window.location.origin
+    }
 
-    alert(getSiteRoot());
+//    alert(getSiteRoot());
 
     var code = getCode(url);
 
@@ -32,7 +32,7 @@ $(document).ready(function(){
         data: JSON.stringify({
             "provider": "facebook",
             "code": code,
-            "redirect_uri":  window.location.origin + "/auth/facebook/redirect"
+            "redirect_uri":  getSiteRoot() + "/auth/facebook/redirect"
         }),
         complete: function(){
             window.location.href = "/";

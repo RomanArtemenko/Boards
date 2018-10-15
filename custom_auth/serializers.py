@@ -25,8 +25,8 @@ class SignUpSerializer(serializers.Serializer):
     first_name = serializers.CharField(min_length=2, max_length=50)
     last_name = serializers.CharField(min_length=2, max_length=50)
     phone_number = serializers.CharField(min_length=10, max_length=10,
-        validators=[PhoneNumberValidator()]
-    )
+                                         validators=[PhoneNumberValidator()]
+                                         )
     password = serializers.CharField(min_length=8, max_length=128)
     password_confirm = serializers.CharField(min_length=8, max_length=128)
 
@@ -43,7 +43,7 @@ class SignUpSerializer(serializers.Serializer):
         phone_number = user_data.pop('phone_number')
         user_data.pop('password_confirm')
         user = User.objects.create_user(**user_data)
-        Profile.objects.create(**{'user':user ,'phone_number': phone_number})
+        Profile.objects.create(**{'user': user, 'phone_number': phone_number})
         return user
 
 
@@ -58,7 +58,9 @@ class SignInSerializer(serializers.Serializer):
         )
 
         if user is None:
-            raise ValidationError('Wrong email or password or not confirmed email')
+            raise ValidationError(
+                'Wrong email or password or not confirmed email'
+            )
 
         token, created = Token.objects.get_or_create(user=user)
         return token

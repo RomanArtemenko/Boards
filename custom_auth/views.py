@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
@@ -19,16 +20,12 @@ from .serializers import UserSerializer, SignUpSerializer, SignInSerializer
 from .tokens import account_activation_token
 from boards.settings import OAUTH_CREDENTIALS
 import urllib
-import requests
 User = get_user_model()
-
-
-
 
 # Create your views here.
 
 
-#API
+# API
 class SingUp(viewsets.mixins.CreateModelMixin, viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = SignUpSerializer
@@ -41,8 +38,10 @@ class SingUp(viewsets.mixins.CreateModelMixin, viewsets.GenericViewSet):
         # out_serializer = UserSerializer(serializer.instance)
         confirm = ConfirmEmailView(self.request, serializer.instance)
         confirm.request_confirm()
-        return Response("Confirm your email address to complete the registration",
-                        status=status.HTTP_201_CREATED, headers=headers)
+        return Response(
+            "Confirm your email address to complete the registration",
+            status=status.HTTP_201_CREATED, headers=headers
+        )
 
 
 class SignIn(viewsets.mixins.CreateModelMixin, viewsets.GenericViewSet):
@@ -71,7 +70,9 @@ class ActivationView(View):
             user.is_active = True
             user.save()
             # return redirect('home')
-            return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+            return HttpResponse(
+                'Thank you for your email confirmation. Now you can login your account.'
+            )
         else:
             return HttpResponse('Activation link is invalid!')
 
@@ -115,45 +116,80 @@ class FBRedirect(View):
     def get(self, request, *arg, **kwargs):
         return render(request, self.template_name, *arg, **kwargs)
 
+
 class Facebook():
-    def __init__(self):
-        pass
+    social_name = 'facebook'
+
+    def __init__(self, domain, redirect_path):
+        self.fields = (
+            'id',
+            'secret',
+            'graph_root',
+            'access_url',
+            'authorize_url',
+            'info_url'
+        )
+
+        self.settings = self.get_setings(Facebook.social_name)
+        self.fields_initialization()
+
+        self.authorize_url = 'https://www.facebook.com/v3.1/dialog/oauth?'
+
+        self.authorize_vars = {
+            'client_id': self.id,
+            'redirect_uri':
+                self.get_redirect_uri(domain, redirect_path),
+            'response_type': 'code',
+            'scope': 'email'
+        }
+
+    def get_redirect_uri(self, domain, path):
+
+        return urllib.parse.urljoin(
+                    'http://%s' % domain, path)
+
+    def get_setings(self, social_name):
+        if OAUTH_CREDENTIALS.get(social_name) is None:
+            raise ImproperlyConfigured(
+                "There is no such configuration !"
+            )
+        else:
+            return OAUTH_CREDENTIALS.get(social_name)
+
+    def fields_initialization(self):
+        for field in self.fields:
+            if self.settings.get(field) is None:
+                raise ImproperlyConfigured(
+                    "%s does not exist !" % field)
+            else:
+                setattr(self, field, self.settings.get(field))
+
+    def get_authorize_url(self):
+        return self.authorize_url + urllib.parse.urlencode(self.authorize_vars)
 
 
 class SignInFacebookView(View):
 
-    def __init__(self):
-        pass
-
     template_name = "custom_auth/sign_in_facebook.html"
     errors = []
-
-    authorize_url = 'https://www.facebook.com/v3.1/dialog/oauth?'
-
-    clint_id = OAUTH_CREDENTIALS['facebook']['id']
-    try:
-        site = Site.objects.get_current()
-    except OperationalError:
-        site = None
-        raise ValueError('Maybe table does not exist or empty yet')
-
     relaive_redirect_path = '/auth/facebook/redirect'
 
-    authorize_vars = {
-        'client_id': clint_id,
-        'redirect_uri':
-        urllib.parse.urljoin(
-            'https://%s' % site.domain,
-            relaive_redirect_path
-        ),
-        'response_type': 'code',
-        'scope': 'email'
-    }
+    def __init__(self):
 
-    url = authorize_url + urllib.parse.urlencode(authorize_vars)
+        try:
+            self.site = Site.objects.get_current()
+        except OperationalError:
+            self.site = None
+            raise ValueError('Maybe table does not exist or empty yet')
+
+        self.fb = Facebook(
+            self.site.domain,
+            SignInFacebookView.relaive_redirect_path
+        )
 
     def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(self.url)
+        url = self.fb.get_authorize_url()
+        return HttpResponseRedirect(url)
 
 
 class FacebookRedirectView(View):
@@ -166,7 +202,7 @@ class FacebookRedirectView(View):
         return render(request, self.template_name)
 
 
-class UserInfo(viewsets.mixins.ListModelMixin ,viewsets.GenericViewSet):
+class UserInfo(viewsets.mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
