@@ -42,7 +42,7 @@ class CardSerializer(serializers.ModelSerializer):
 
 class ChoiceLoader():
 
-    def __init__(self, model, fields=None, methods=None):
+    def __init__(self, model, fields=None, methods=None, empty_line=None):
 
         if fields is None:
             fields = []
@@ -62,6 +62,9 @@ class ChoiceLoader():
         except (AttributeError, EmptyResultSet, OperationalError):
             self._data = []
 
+        if empty_line is not None:
+            self._data = self._data + [[None, empty_line]]
+
     def get_data(self):
         return list(self._data)
 
@@ -69,7 +72,7 @@ class ChoiceLoader():
 class CardCreateSerializer(serializers.ModelSerializer):
 
     assigned_to = serializers.ChoiceField(choices=ChoiceLoader(
-        User, ['id'], ['get_full_name']
+        User, ['id'], ['get_full_name'], empty_line="---------"
     ).get_data())
     status = serializers.ChoiceField(choices=ChoiceLoader(
         Status, ['id', 'name']
