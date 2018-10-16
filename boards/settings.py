@@ -23,8 +23,8 @@ try:
         SOCIAL_AUTH_FACEBOOK_LOGIN_URL, SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS, \
         SOCIAL_AUTH_FACEBOOK_SCOPE, SOCIAL_AUTH_FACEBOOK_SECRET, SOCIAL_AUTH_LOGIN_REDIRECT_URL
 except ImportError:
-    # pass
-    raise ImportError("settings_local.py not found")
+    pass
+    # raise ImportError("settings_local.py not found")
 
 try:
     from .social_config import OAUTH_CREDENTIALS
