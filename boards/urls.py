@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -24,4 +26,4 @@ urlpatterns = [
     url('', include('social_django.urls', namespace='social')),
     url(r'^api/login/', include('rest_social_auth.urls_token')),
     path('manage/', include('card.urls')),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
