@@ -19,13 +19,13 @@ class Status(models.Model):
         default=False,
     )
 
-    def get_default_status():
-        try:
-            instance = Status.objects.get(is_default=True)
-        except (EmptyResultSet, OperationalError,):
-            instance = None
-
-        return instance
+    # def get_default_status():
+    #     try:
+    #         instance = Status.objects.get(is_default=True)
+    #     except (EmptyResultSet, OperationalError,):
+    #         instance = None
+    #
+    #     return instance
 
 
 class Role(models.Model):
@@ -52,6 +52,6 @@ class Card(models.Model):
     status = models.ForeignKey(
         Status,
         on_delete=models.PROTECT,
-        default=Status.get_default_status(),
+        # default=Status.get_default_status(),
     )
     role = models.ManyToManyField(Role, blank=True)
