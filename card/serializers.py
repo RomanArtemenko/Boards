@@ -71,15 +71,15 @@ class ChoiceLoader():
 
 class CardCreateSerializer(serializers.ModelSerializer):
 
-    # assigned_to = serializers.ChoiceField(choices=ChoiceLoader(
-    #     User, ['id'], ['get_full_name'], empty_line="---------"
-    # ).get_data())
-    # status = serializers.ChoiceField(choices=ChoiceLoader(
-    #     Status, ['id', 'name']
-    # ).get_data())
-    # role = serializers.ChoiceField(choices=ChoiceLoader(
-    #     Role, ['id', 'name']
-    # ).get_data())
+    assigned_to = serializers.ChoiceField(choices=ChoiceLoader(
+        User, ['id'], ['get_full_name'], empty_line="---------"
+    ).get_data())
+    status = serializers.ChoiceField(choices=ChoiceLoader(
+        Status, ['id', 'name']
+    ).get_data())
+    role = serializers.ChoiceField(choices=ChoiceLoader(
+        Role, ['id', 'name']
+    ).get_data())
 
     class Meta:
         model = Card
