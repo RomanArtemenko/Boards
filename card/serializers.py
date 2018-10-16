@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db import ProgrammingError
 from rest_framework import serializers
 from .models import Card, Status, Role
 from django.core.exceptions import EmptyResultSet
@@ -59,7 +60,7 @@ class ChoiceLoader():
                 [getattr(item, method)() for method in methods]
                 for item in model.objects.all()
             ]
-        except (AttributeError, EmptyResultSet, OperationalError):
+        except (AttributeError, EmptyResultSet, OperationalError, ProgrammingError):
             self._data = []
 
         if empty_line is not None:
