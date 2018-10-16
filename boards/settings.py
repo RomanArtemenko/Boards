@@ -13,14 +13,17 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 import dj_database_url
 import django_heroku
-from .settings_local import SECRET_KEY, ADMINS
-from .settings_local import EMAIL_HOST, EMAIL_HOST_PASSWORD, EMAIL_HOST_USER,\
-    EMAIL_PORT, EMAIL_USE_TLS
-from .settings_local import SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS, \
-    SOCIAL_AUTH_FACEBOOK_AUTH_EXTRA_ARGUMENTS, SOCIAL_AUTH_FACEBOOK_KEY, \
-    SOCIAL_AUTH_FACEBOOK_LOGIN_URL, SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS, \
-    SOCIAL_AUTH_FACEBOOK_SCOPE, SOCIAL_AUTH_FACEBOOK_SECRET, SOCIAL_AUTH_LOGIN_REDIRECT_URL
 
+try:
+    from .settings_local import SECRET_KEY, ADMINS
+    from .settings_local import EMAIL_HOST, EMAIL_HOST_PASSWORD, EMAIL_HOST_USER,\
+        EMAIL_PORT, EMAIL_USE_TLS
+    from .settings_local import SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS, \
+        SOCIAL_AUTH_FACEBOOK_AUTH_EXTRA_ARGUMENTS, SOCIAL_AUTH_FACEBOOK_KEY, \
+        SOCIAL_AUTH_FACEBOOK_LOGIN_URL, SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS, \
+        SOCIAL_AUTH_FACEBOOK_SCOPE, SOCIAL_AUTH_FACEBOOK_SECRET, SOCIAL_AUTH_LOGIN_REDIRECT_URL
+except ImportError:
+    raise ImportError("settings_local.py not found")
 
 try:
     from .social_config import OAUTH_CREDENTIALS
