@@ -25,7 +25,7 @@ try:
         SOCIAL_AUTH_FACEBOOK_SECRET, SOCIAL_AUTH_LOGIN_REDIRECT_URL
 except ImportError:
     SECRET_KEY = os.environ.get(
-        SECRET_KEY,
+        'SECRET_KEY',
         'You_must_set_SECRET_KEY_right_now!'
     )
     ADMINS = os.environ.get(
