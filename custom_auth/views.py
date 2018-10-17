@@ -146,7 +146,7 @@ class Facebook():
     def get_redirect_uri(self, domain, path):
 
         return urllib.parse.urljoin(
-                    'http://%s' % domain, path)
+                    'https://%s' % domain, path)
 
     def get_setings(self, social_name):
         if OAUTH_CREDENTIALS.get(social_name) is None:
