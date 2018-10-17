@@ -42,7 +42,8 @@ class SignUpSerializer(serializers.Serializer):
         user_data = dict(validated_data)
         phone_number = user_data.pop('phone_number')
         user_data.pop('password_confirm')
-        user = User.objects.create_user(**user_data)
+        # user = User.objects.create_user(**user_data)
+        user = User.objects.create_unconfirm_user(**user_data)
         Profile.objects.create(**{'user': user, 'phone_number': phone_number})
         return user
 
