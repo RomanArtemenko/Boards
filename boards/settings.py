@@ -16,14 +16,70 @@ import django_heroku
 
 try:
     from .settings_local import SECRET_KEY, ADMINS
-    from .settings_local import EMAIL_HOST, EMAIL_HOST_PASSWORD, EMAIL_HOST_USER,\
-        EMAIL_PORT, EMAIL_USE_TLS
+    from .settings_local import EMAIL_HOST, EMAIL_HOST_PASSWORD, \
+        EMAIL_HOST_USER, EMAIL_PORT, EMAIL_USE_TLS
     from .settings_local import SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS, \
         SOCIAL_AUTH_FACEBOOK_AUTH_EXTRA_ARGUMENTS, SOCIAL_AUTH_FACEBOOK_KEY, \
-        SOCIAL_AUTH_FACEBOOK_LOGIN_URL, SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS, \
-        SOCIAL_AUTH_FACEBOOK_SCOPE, SOCIAL_AUTH_FACEBOOK_SECRET, SOCIAL_AUTH_LOGIN_REDIRECT_URL
+        SOCIAL_AUTH_FACEBOOK_LOGIN_URL, SOCIAL_AUTH_FACEBOOK_SCOPE, \
+        SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS, \
+        SOCIAL_AUTH_FACEBOOK_SECRET, SOCIAL_AUTH_LOGIN_REDIRECT_URL
 except ImportError:
-    pass
+    SECRET_KEY = os.environ.get(
+        'SECRET_KEY',
+        'You_must_set_SECRET_KEY_right_now!'
+    )
+    ADMINS = os.environ.get(
+        'ADMINS',
+        (('Roman', 'AnonimFakeov@gmail.com'),)
+    )
+
+    EMAIL_HOST = os.environ.get(
+        'EMAIL_HOST',
+        'smtp.gmail.com'
+    )
+    EMAIL_HOST_PASSWORD = os.environ.get(
+        'EMAIL_HOST_PASSWORD',
+        'SET_YOUR_PASSWORD'
+    )
+    EMAIL_HOST_USER = os.environ.get(
+        'EMAIL_HOST_USER',
+        'AnonimFakeov@gmail.com'
+    )
+    EMAIL_PORT = os.environ.get('EMAIL_PORT', 587)
+    EMAIL_USE_TLS = bool(os.environ.get('EMAIL_USE_TLS', True))
+
+    SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = os.environ.get(
+        'SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS',
+        ['email', 'username', 'first_name', 'last_name']
+    )
+    SOCIAL_AUTH_FACEBOOK_AUTH_EXTRA_ARGUMENTS = os.environ.get(
+        'SOCIAL_AUTH_FACEBOOK_AUTH_EXTRA_ARGUMENTS',
+        {'display': 'touch'}
+    )
+    SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get(
+        'SOCIAL_AUTH_FACEBOOK_KEY',
+        'SET_YOUR_APP_KEY'
+    )
+    SOCIAL_AUTH_FACEBOOK_LOGIN_URL = os.environ.get(
+        'SOCIAL_AUTH_FACEBOOK_LOGIN_URL',
+        'xxx'
+    )
+    SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = os.environ.get(
+        'SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS',
+        {'fields': 'id,name,email', }
+    )
+    SOCIAL_AUTH_FACEBOOK_SCOPE = os.environ.get(
+        'SOCIAL_AUTH_FACEBOOK_SCOPE',
+        ['email', ]
+    )
+    SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get(
+        'SOCIAL_AUTH_FACEBOOK_SECRET',
+        'SET_YOUR_APP_KEY'
+    )
+    SOCIAL_AUTH_LOGIN_REDIRECT_URL = os.environ.get(
+        'SOCIAL_AUTH_LOGIN_REDIRECT_URL',
+        'xxx'
+    )
     # raise ImportError("settings_local.py not found")
 
 try:
