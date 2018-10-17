@@ -25,12 +25,12 @@ try:
         SOCIAL_AUTH_FACEBOOK_SECRET, SOCIAL_AUTH_LOGIN_REDIRECT_URL
 except ImportError:
     SECRET_KEY = os.environ.get(
-        'SECRET_KEY',
+        SECRET_KEY,
         'You_must_set_SECRET_KEY_right_now!'
     )
     ADMINS = os.environ.get(
         'ADMINS',
-        (('Roman', 'AnonimFakeov@gmail.com'),)
+        (('Roman', 'AnonimFakeov@gmail.com'), )
     )
 
     EMAIL_HOST = os.environ.get(
@@ -47,6 +47,11 @@ except ImportError:
     )
     EMAIL_PORT = os.environ.get('EMAIL_PORT', 587)
     EMAIL_USE_TLS = bool(os.environ.get('EMAIL_USE_TLS', True))
+    EMAIL_BACKEND = os.environ.get(
+        'EMAIL_BACKEND',
+        'django.core.mail.backends.smtp.EmailBackend'
+    )
+    EMAIL_USE_SSL = bool(os.environ.get('EMAIL_USE_SSL', False))
 
     SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = os.environ.get(
         'SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS',

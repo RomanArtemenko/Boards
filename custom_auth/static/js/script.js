@@ -163,7 +163,7 @@ $(function () {
             cache: false,
             success: function(data){
                 console.log(data);
-                window.location.hash = '#sign';
+                window.location.hash = '#sign-in';
             },
             error: function(xhr){
                 $('#signUpErr').html(xhr.responseText);
