@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import ProgrammingError
 from rest_framework import serializers
-from .models import Card, Status, Role
+from .models import Card, Status, Role, Collection
 from django.core.exceptions import EmptyResultSet
 from django.db.utils import OperationalError
 
@@ -86,3 +86,12 @@ class CardCreateSerializer(serializers.ModelSerializer):
         model = Card
         fields = ('id', 'title', 'description', 'assigned_to', 'due_date',
                   'owner', 'status', 'role')
+
+
+class CollectionSerializer(serializers.ModelSerializer):
+
+    created_by = UserLiteSerializer(read_only=True)
+
+    class Meta:
+        model = Collection
+        fields = ('id', 'name', 'description', 'created_by')
