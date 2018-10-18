@@ -7,6 +7,7 @@ router = DefaultRouter()
 router.register(r'card', views.CardViewSet)
 router.register(r'role', views.RoleViewSet)
 router.register(r'status', views.StatusViewSet)
+router.register(r'collection', views.CollectionViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
