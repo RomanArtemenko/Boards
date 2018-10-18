@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from .models import Card, Status, Role
+from .models import Card, Status, Role, Collection
 from .serializers import CardSerializer, RoleSerializer, \
-    StatusSerializer, CardCreateSerializer
+    StatusSerializer, CardCreateSerializer, CollectionSerializer
 
 # Create your views here.
 
@@ -69,4 +69,13 @@ class StatusViewSet(viewsets.mixins.RetrieveModelMixin,
                     viewsets.GenericViewSet):
     serializer_class = StatusSerializer
     queryset = Status.objects.all()
+    permission_classes = (IsAuthenticated,)
+
+
+class CollectionViewSet(viewsets.mixins.CreateModelMixin,
+                        viewsets.mixins.RetrieveModelMixin,
+                        viewsets.mixins.ListModelMixin,
+                        viewsets.GenericViewSet):
+    serializer_class = CollectionSerializer
+    queryset = Collection.objects.all()
     permission_classes = (IsAuthenticated,)
