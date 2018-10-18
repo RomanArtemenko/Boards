@@ -55,3 +55,12 @@ class Card(models.Model):
         # default=Status.get_default_status(),
     )
     role = models.ManyToManyField(Role, blank=True)
+
+
+class Collection(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=1000)
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+    )
