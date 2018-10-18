@@ -27,7 +27,8 @@ $(function () {
 		tokenKey = 'UserToken',
 		userToken = null,
         userInfo = [],
-        myCards = [];
+        myCards = [],
+        myCollections = [];
 
      initLogin();
 
@@ -36,6 +37,11 @@ $(function () {
 	//	Loading ny cards
 	$('#mycards').click(function () {
         getMyCards();
+
+        $('#btnNewCard').show();
+        $('#tableMyCards').show();
+	    $('#btnNewCollection').hide();
+	    $('#tableMyCollections').hide();
 	});
 
 
@@ -79,6 +85,42 @@ $(function () {
 
     }
 
+
+    function getMyCollections() {
+        $.ajax({
+            type: "GET",
+            url: "/manage/collection/",
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
+            },
+            contentType: "application/json",
+            cache: false,
+            success: function(data){
+                myCollections = data;
+                console.log(data);
+                renderMyCollections(data);
+            },
+            error: function(xhr){
+                console.log(xhr);
+            }
+        });
+    }
+
+
+    function renderMyCollections(data) {
+        var collection;
+
+        $('#tableMyCollections > tbody > tr').remove();
+
+        for(collection = 0; collection < data.length; collection++) {
+            row = '<tr>'+
+                  '<th scope="row"><a href="/#collection/' + data[collection].id + '">' + data[collection].id  + '</a></th>' +
+                  '<td>' + data[collection].name + '</td>'
+                  '</tr>';
+
+            $('#tableMyCollections > tbody:last-child').append(row);
+        }
+    }
 
 
     function getAssignedTo() {
@@ -193,6 +235,20 @@ $(function () {
         window.location.hash = '#card/new';
 	});
 
+    // New Card
+	$('#btnNewCollection').click(function () {
+        window.location.hash = '#collection/new';
+	});
+
+	$('#mycollections').on('click', function () {
+	    getMyCollections()
+
+        $('#btnNewCard').hide();
+        $('#tableMyCards').hide();
+	    $('#btnNewCollection').show();
+	    $('#tableMyCollections').show();
+	});
+
     // Save Card
 //	$('#btnSaveNewCard').click();
 
@@ -231,6 +287,36 @@ $(function () {
 
 	function saveChangesCard() {
 	    alert('Save changes in current card...');
+	}
+
+
+	function saveNewCollection() {
+		// Do saving new collection
+		var name = $('#inputCollectionName').val(),
+            description = $('#collectionDescription').val();
+
+        $.ajax({
+            type: "POST",
+            url: "/manage/collection/",
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
+            },
+            data: JSON.stringify({
+                "name": name,
+                "description": description
+            }),
+            contentType: "application/json",
+            cache: false,
+            async: false,
+            success: function(data){
+                console.log(data);
+                window.location.hash = '#';
+            },
+            error: function(xhr){
+                $('#collectionErr').html(xhr.responseText);
+            }
+        });
+
 	}
 
 
@@ -343,6 +429,27 @@ $(function () {
 		}
 
 	});
+
+
+	// Collection page buttons
+	var singleCollection = $('.single-collection');
+
+	singleCollection.on('click', function (e) {
+
+		if (singleCollection.hasClass('visible')) {
+
+    		var clicked = $(e.target);
+
+			// If the close button or the background are clicked go to the previous page.
+			if (clicked.hasClass('close') || clicked.hasClass('overlay') || clicked.hasClass('btn-close')) {
+				// Change the url hash with the last used filters.
+				createQueryHash(filters);
+
+			}
+
+		}
+	});
+
 
 
 	// These are called on page load
@@ -494,6 +601,15 @@ $(function () {
 
 			},
 
+            // Single Collection Page
+			'#collection': function() {
+
+				var index = url.split('#collection/')[1].trim();
+
+				renderSingleCollectionPage(index, myCollections);
+
+			},
+
 			// Single Products page.
 			'#product': function() {
 
@@ -617,6 +733,26 @@ $(function () {
 					container.find('p').text(item.description);
 				}
 			});
+		}
+
+		// Show the page.
+		page.addClass('visible');
+
+	}
+
+
+    function renderSingleCollectionPage(index, collections) {
+		// Do here
+		var page = $('.single-collection');
+
+		$('#btnSaveCollection').unbind('click');
+
+		if (index == 'new') {
+
+			$('#btnSaveCollection').on('click', saveNewCollection);
+
+		} else {
+			console.log('collection do something ...');
 		}
 
 		// Show the page.
