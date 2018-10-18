@@ -101,7 +101,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = bool(os.environ.get('DEBUG', True))
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     'fathomless-caverns-59999.herokuapp.com',
