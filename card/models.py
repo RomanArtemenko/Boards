@@ -32,6 +32,15 @@ class Role(models.Model):
     name = models.CharField(max_length=20, unique=True)
 
 
+class Collection(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=1000)
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+    )
+
+
 class Card(models.Model):
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=1000)
@@ -55,12 +64,9 @@ class Card(models.Model):
         # default=Status.get_default_status(),
     )
     role = models.ManyToManyField(Role, blank=True)
-
-
-class Collection(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.CharField(max_length=1000)
-    created_by = models.ForeignKey(
-        User,
+    collection = models.ForeignKey(
+        Collection,
         on_delete=models.PROTECT,
+        blank=True,
+        null=True,
     )
