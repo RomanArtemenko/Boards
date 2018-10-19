@@ -91,7 +91,8 @@ class CardCreateSerializer(serializers.ModelSerializer):
 class CollectionSerializer(serializers.ModelSerializer):
 
     created_by = UserLiteSerializer(read_only=True)
+    cards = CardSerializer(read_only=True, many=True)
 
     class Meta:
         model = Collection
-        fields = ('id', 'name', 'description', 'created_by')
+        fields = ('id', 'name', 'description', 'created_by', 'cards')

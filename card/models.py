@@ -69,4 +69,5 @@ class Card(models.Model):
         on_delete=models.PROTECT,
         blank=True,
         null=True,
+        related_name='cards',
     )
