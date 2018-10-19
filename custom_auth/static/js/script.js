@@ -49,14 +49,13 @@ $(function () {
         $.ajax({
             type: "GET",
             url: "/manage/card/?me",
-            beforeSend: function(xhr, settings) {
-                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
-            },
+//            beforeSend: function(xhr, settings) {
+//                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
+//            },
             contentType: "application/json",
             cache: false,
             success: function(data){
                 myCards = data;
-                console.log(data);
                 renderMyCards(data);
             },
             error: function(xhr){
@@ -97,7 +96,6 @@ $(function () {
             cache: false,
             success: function(data){
                 myCollections = data;
-                console.log(data);
                 renderMyCollections(data);
             },
             error: function(xhr){
@@ -134,7 +132,6 @@ $(function () {
             cache: false,
             success: function(data){
                 assignedTo = data;
-                console.log(data);
                 renderAssignedTo(data);
             },
             error: function(xhr){
@@ -173,7 +170,6 @@ $(function () {
             success: function(data){
 //                localStorage.setItem(tokenKey, data);
                 localStorage.setItem('UserToken', data);
-                console.log(data);
 //                getProfile();
                 initLogin();
 
@@ -204,7 +200,6 @@ $(function () {
             contentType: "application/json",
             cache: false,
             success: function(data){
-                console.log(data);
                 window.location.hash = '#sign-in';
             },
             error: function(xhr){
@@ -275,7 +270,6 @@ $(function () {
             cache: false,
             async: false,
             success: function(data){
-                console.log(data);
                 window.location.hash = '#';
             },
             error: function(xhr){
@@ -309,7 +303,6 @@ $(function () {
             cache: false,
             async: false,
             success: function(data){
-                console.log(data);
                 window.location.hash = '#';
             },
             error: function(xhr){
@@ -495,7 +488,6 @@ $(function () {
             }
         });
 
-        console.log("User info : " + userInfo );
 	}
 
 
@@ -752,7 +744,7 @@ $(function () {
 			$('#btnSaveCollection').on('click', saveNewCollection);
 
 		} else {
-			console.log('collection do something ...');
+			//Do nothing
 		}
 
 		// Show the page.
@@ -935,6 +927,8 @@ $(function () {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", $('input[name="csrfmiddlewaretoken"]').val());
             }
+
+            xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
         }
     });
 
