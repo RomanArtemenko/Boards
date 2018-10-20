@@ -90,7 +90,8 @@ class CardCreateSerializer(serializers.ModelSerializer):
 
 class CollectionSerializer(serializers.ModelSerializer):
 
-    created_by = UserLiteSerializer(read_only=True)
+    created_by = UserLiteSerializer(
+        default=serializers.CurrentUserDefault(),)
 
     class Meta:
         model = Collection

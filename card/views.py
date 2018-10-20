@@ -80,7 +80,7 @@ class CollectionViewSet(viewsets.mixins.CreateModelMixin,
     queryset = Collection.objects.all()
     permission_classes = (IsAuthenticated,)
 
-    def perform_create(self, serializer):
-        serializer.save(
-            created_by=self.request.user
-        )
+    # def perform_create(self, serializer):
+    #     serializer.save(
+    #         created_by=self.request.user
+    #     )
