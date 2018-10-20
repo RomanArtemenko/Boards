@@ -49,9 +49,6 @@ $(function () {
         $.ajax({
             type: "GET",
             url: "/manage/card/?me",
-//            beforeSend: function(xhr, settings) {
-//                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
-//            },
             contentType: "application/json",
             cache: false,
             success: function(data){
@@ -89,9 +86,6 @@ $(function () {
         $.ajax({
             type: "GET",
             url: "/manage/collection/",
-            beforeSend: function(xhr, settings) {
-                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
-            },
             contentType: "application/json",
             cache: false,
             success: function(data){
@@ -125,9 +119,6 @@ $(function () {
         $.ajax({
             type: "OPTIONS",
             url: "/manage/card/",
-            beforeSend: function(xhr, settings) {
-                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
-            },
             contentType: "application/json",
             cache: false,
             success: function(data){
@@ -257,9 +248,6 @@ $(function () {
         $.ajax({
             type: "POST",
             url: "/manage/card/",
-            beforeSend: function(xhr, settings) {
-                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
-            },
             data: JSON.stringify({
                 "title": title,
                 "description": description,
@@ -292,9 +280,6 @@ $(function () {
         $.ajax({
             type: "POST",
             url: "/manage/collection/",
-            beforeSend: function(xhr, settings) {
-                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
-            },
             data: JSON.stringify({
                 "name": name,
                 "description": description
@@ -444,23 +429,6 @@ $(function () {
 	});
 
 
-
-	// These are called on page load
-
-	// Get data about our products from products.json.
-//	$.getJSON( "products.json", function( data ) {
-//
-//		// Write the data into our global variable.
-//		products = data;
-//
-//		// Call a function to create HTML for all the products.
-//		generateAllProductsHTML(products);
-//
-//		// Manually trigger a hashchange to start the app.
-//		$(window).trigger('hashchange');
-//	});
-
-
 	// An event handler with calls the render function on every hashchange.
 	// The render function will show the appropriate content of out page.
 	$(window).on('hashchange', function(){
@@ -473,9 +441,6 @@ $(function () {
 	    $.ajax({
             type: "GET",
             url: "/profile/",
-            beforeSend: function(xhr, settings) {
-                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
-            },
             contentType: "application/json",
             cache: false,
             async: false,
