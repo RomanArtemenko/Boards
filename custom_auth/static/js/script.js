@@ -119,9 +119,6 @@ $(function () {
         $.ajax({
             type: "GET",
             url: "/manage/card/?available",
-            beforeSend: function(xhr, settings) {
-                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
-            },
             contentType: "application/json",
             cache: false,
             success: function(data){
