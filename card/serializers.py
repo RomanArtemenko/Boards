@@ -33,12 +33,14 @@ class CardSerializer(serializers.ModelSerializer):
     assigned_to = UserLiteSerializer(read_only=True, allow_null=True)
     owner = UserLiteSerializer(read_only=True)
     status = StatusSerializer(allow_null=True)
-    role = RoleSerializer(read_only=True, many=True)
+    role = RoleSerializer(read_only=True, many=True, allow_null=True)
 
     class Meta:
         model = Card
         fields = ('id', 'title', 'description', 'due_date',
                   'owner', 'status', 'role', 'created_date', 'assigned_to')
+
+
 
 
 class ChoiceLoader():
@@ -75,17 +77,21 @@ class CardCreateSerializer(serializers.ModelSerializer):
     assigned_to = serializers.ChoiceField(choices=ChoiceLoader(
         User, ['id'], ['get_full_name'], empty_line="---------"
     ).get_data())
-    status = serializers.ChoiceField(choices=ChoiceLoader(
+    status_id = serializers.ChoiceField(choices=ChoiceLoader(
         Status, ['id', 'name']
     ).get_data())
     role = serializers.ChoiceField(choices=ChoiceLoader(
         Role, ['id', 'name']
+    ).get_data(),
+                                   allow_null=True)
+    collection = serializers.ChoiceField(choices=ChoiceLoader(
+        Collection, ['id', 'name']
     ).get_data())
 
     class Meta:
         model = Card
         fields = ('id', 'title', 'description', 'assigned_to', 'due_date',
-                  'owner', 'status', 'role')
+                  'owner', 'status_id', 'role', 'collection')
 
 
 class CollectionSerializer(serializers.ModelSerializer):

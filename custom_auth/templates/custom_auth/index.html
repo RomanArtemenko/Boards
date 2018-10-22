@@ -240,8 +240,8 @@
 						<div class="col">
 							<form class="form-inline">
 								<div class="form-group">
-									<label class="field-name" for="cardAssignedTo">Createt by : </label>
-									<input type="text" class="form-control" id="cardAssignedTo" value="New User" list="assignedToList">
+									<label class="field-name" for="cardAssignedTo">Assigned to : </label>
+									<input type="text" class="form-control" id="cardAssignedTo" value="" list="assignedToList">
 									<datalist id="assignedToList">
 										<option value="None" data-value="null">
 									</datalist>
@@ -249,6 +249,52 @@
 							</form>
 						</div>
 					</div>
+
+					<!--start new row-->
+
+					<div class="row">
+						<div class="col">
+							<!--<form class="form-inline">-->
+								<!--<div class="form-group">-->
+									<!--<label class="field-name" for="cardOwner">Createt by : </label>-->
+									<!--<input type="text" class="form-control" id="cardOwner" value="" readonly>-->
+								<!--</div>-->
+							<!--</form>-->
+						</div>
+						<div class="col">
+							<!--<label class="field-name">Status : </label>-->
+							<!--<label class="field-val" id="cardStatus">New</label>-->
+
+							<!--<form class="form-inline">-->
+								<!--<div class="form-group">-->
+									<!--<label class="field-name" for="cardStatus">Status : </label>-->
+									<!--<input type="text" class="form-control" id="cardStatus" value="New" readonly>-->
+								<!--</div>-->
+							<!--</form>-->
+						</div>
+						<div class="w-100"></div>
+						<div class="col">
+							<form class="form-inline">
+								<div class="form-group">
+									<label class="field-name" for="cardDueDate">Due date : </label>
+									<input type="text" class="form-control" id="cardDueDate" value="0000-13-32 13:08:45" readonly>
+								</div>
+							</form>
+						</div>
+						<div class="col">
+							<form class="form-inline">
+								<div class="form-group">
+									<label class="field-name" for="cardCollection">Collection : </label>
+									<input type="text" class="form-control" id="cardCollection" value="" list="cardCollectionList">
+									<datalist id="cardCollectionList">
+										<option value="None" data-value="null">
+									</datalist>
+								</div>
+							</form>
+						</div>
+					</div>
+
+					<!--end new row-->
 
 					<div class="form-group decription">
 						<label class="decription" for="cardDescription"><strong>Description : </strong></label>

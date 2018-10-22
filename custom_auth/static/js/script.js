@@ -28,7 +28,8 @@ $(function () {
 		userToken = null,
         userInfo = [],
         myCards = [],
-        myCollections = [];
+        myCollections = [],
+        choiceCollection = [];
 
      initLogin();
 
@@ -49,9 +50,6 @@ $(function () {
         $.ajax({
             type: "GET",
             url: "/manage/card/?me",
-            beforeSend: function(xhr, settings) {
-                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
-            },
             contentType: "application/json",
             cache: false,
             success: function(data){
@@ -89,9 +87,6 @@ $(function () {
         $.ajax({
             type: "GET",
             url: "/manage/collection/",
-            beforeSend: function(xhr, settings) {
-                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
-            },
             contentType: "application/json",
             cache: false,
             success: function(data){
@@ -125,9 +120,6 @@ $(function () {
         $.ajax({
             type: "GET",
             url: "/manage/card/?available",
-            beforeSend: function(xhr, settings) {
-                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
-            },
             contentType: "application/json",
             cache: false,
             success: function(data){
@@ -158,9 +150,6 @@ $(function () {
         $.ajax({
             type: "OPTIONS",
             url: "/manage/card/",
-            beforeSend: function(xhr, settings) {
-                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
-            },
             contentType: "application/json",
             cache: false,
             success: function(data){
@@ -183,6 +172,38 @@ $(function () {
             row = '<option value="' + listAssignedTo[item].display_name + '" data-value="' + listAssignedTo[item].value + '">';
 
             $('#assignedToList').append(row);
+        }
+
+    }
+
+
+    function getCollection(){
+        $.ajax({
+            type: "OPTIONS",
+            url: "/manage/card/",
+            contentType: "application/json",
+            cache: false,
+            success: function(data){
+                collection = data;
+                console.log(data);
+                renderCollection(data);
+            },
+            error: function(xhr){
+                console.log(xhr);
+            }
+        });
+    }
+
+    function renderCollection(data) {
+        var item;
+        var listCollection = data.actions.POST.collection.choices;
+
+        $('#cardCollectionList > option').remove();
+
+        for(item = 0; item < listCollection.length; item++) {
+            row = '<option value="' + listCollection[item].display_name + '" id="' + listCollection[item].value + '">';
+
+            $('#cardCollectionList').append(row);
         }
 
     }
@@ -280,7 +301,7 @@ $(function () {
             type: "POST",
             url: "/manage/card/",
             data: JSON.stringify({
-                "collection": $("#collectionIdForAddCard").val();
+                "collection": $("#collectionIdForAddCard").val()
             }),
             contentType: "application/json",
             cache: false,
@@ -316,9 +337,6 @@ $(function () {
         $.ajax({
             type: "POST",
             url: "/manage/card/",
-            beforeSend: function(xhr, settings) {
-                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
-            },
             data: JSON.stringify({
                 "title": title,
                 "description": description,
@@ -339,8 +357,69 @@ $(function () {
 	}
 
 	function saveChangesCard() {
-	    alert('Save changes in current card...');
+
+        var selected_id = getIdByName($("#cardCollection").val(), $("#cardCollectionList"))
+
+	    alert('Choised val: ' + $("#cardCollection").val() +'/r/n'+ 'Choised_ID: ' + selected_id);
+
+	    var url = decodeURI(window.location.hash),
+	        cardId = url.split('#card/')[1].trim();
+
+//        $.ajax({
+//            type: "PATCH",
+//            url: "/manage/card/" + cardId + "/",
+//            data: JSON.stringify({
+//                "name": name,
+//                "description": description
+//            }),
+//            contentType: "application/json",
+//            cache: false,
+//            async: false,
+//            success: function(data){
+//                window.location.hash = '#';
+//            },
+//            error: function(xhr){
+//                $('#collectionErr').html(xhr.responseText);
+//            }
+//        });
 	}
+
+	function getIdByName(val, searchList) {
+	    var res = null;
+        var list = searchList.attr('list'),
+            option = $('#'+list+' option').filter( function() {
+            return ($(this).val() === val);
+        });
+//        var option = searchList.find("[value='" + val + "']");
+
+//        var option = searchList.filter( function() {
+//            return ($(this).val() === val);
+//        });
+
+        if (option.length > 0) {
+          res = option.attr("id");
+          // do stuff with the id
+        }
+
+        return res;
+	}
+
+	/*
+$("input[name='Typelist']").on('input', function(e){
+   var $input = $(this),
+       val = $input.val();
+       list = $input.attr('list'),
+       match = $('#'+list + ' option').filter(function() {
+           return ($(this).val() === val);
+       });
+
+    if(match.length > 0) {
+        // value is in list
+    } else {
+        // value is not in list
+    }
+});
+	*/
 
 
 	function saveNewCollection() {
@@ -351,9 +430,6 @@ $(function () {
         $.ajax({
             type: "POST",
             url: "/manage/collection/",
-            beforeSend: function(xhr, settings) {
-                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
-            },
             data: JSON.stringify({
                 "name": name,
                 "description": description
@@ -532,9 +608,6 @@ $(function () {
 	    $.ajax({
             type: "GET",
             url: "/profile/",
-            beforeSend: function(xhr, settings) {
-                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
-            },
             contentType: "application/json",
             cache: false,
             async: false,
@@ -864,6 +937,7 @@ $(function () {
             container = $('.preview-large');
 
         getAssignedTo();
+        getCollection();
 
         $('#btnSaveNewCard').unbind('click');
 
@@ -1032,6 +1106,8 @@ $(function () {
             if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", $('input[name="csrfmiddlewaretoken"]').val());
             }
+
+            xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
         }
     });
 
