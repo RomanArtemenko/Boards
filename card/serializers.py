@@ -45,7 +45,7 @@ class CardSerializer(serializers.ModelSerializer):
 
 class ChoiceLoader():
 
-    def __init__(self, model, fields=None, methods=None, empty_line=None):
+    def __init__(self, queryset, fields=None, methods=None, empty_line=None):
 
         if fields is None:
             fields = []
@@ -60,7 +60,7 @@ class ChoiceLoader():
             self._data = [
                 [getattr(item, field) for field in fields] +
                 [getattr(item, method)() for method in methods]
-                for item in model.objects.all()
+                for item in queryset
             ]
         except (AttributeError, EmptyResultSet, OperationalError, ProgrammingError):
             self._data = []
@@ -74,24 +74,30 @@ class ChoiceLoader():
 
 class CardCreateSerializer(serializers.ModelSerializer):
 
-    assigned_to = serializers.ChoiceField(choices=ChoiceLoader(
-        User, ['id'], ['get_full_name'], empty_line="---------"
+    assigned_to_id = serializers.ChoiceField(choices=ChoiceLoader(
+        User.objects.all(),
+        ['id'],
+        ['get_full_name'],
+        empty_line="---------"
     ).get_data())
     status_id = serializers.ChoiceField(choices=ChoiceLoader(
-        Status, ['id', 'name']
+        Status.objects.all(),
+        ['id', 'name']
     ).get_data())
-    role = serializers.ChoiceField(choices=ChoiceLoader(
-        Role, ['id', 'name']
+    role_id = serializers.MultipleChoiceField(choices=ChoiceLoader(
+        Role.objects.all(),
+        ['id', 'name']
     ).get_data(),
                                    allow_null=True)
-    collection = serializers.ChoiceField(choices=ChoiceLoader(
-        Collection, ['id', 'name']
+    collection_id = serializers.ChoiceField(choices=ChoiceLoader(
+        Collection.objects.all(),
+        ['id', 'name']
     ).get_data())
 
     class Meta:
         model = Card
-        fields = ('id', 'title', 'description', 'assigned_to', 'due_date',
-                  'owner', 'status_id', 'role', 'collection')
+        fields = ('id', 'title', 'description', 'assigned_to_id', 'due_date',
+                  'owner', 'status_id', 'role_id', 'collection_id')
 
 
 class CollectionSerializer(serializers.ModelSerializer):

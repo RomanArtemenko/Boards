@@ -164,7 +164,7 @@ $(function () {
 
     function renderAssignedTo(data) {
         var item;
-        var listAssignedTo = data.actions.POST.assigned_to.choices;
+        var listAssignedTo = data.actions.POST.assigned_to_id.choices;
 
         $('#assignedToList > option').remove();
 
@@ -185,7 +185,6 @@ $(function () {
             cache: false,
             success: function(data){
                 collection = data;
-                console.log(data);
                 renderCollection(data);
             },
             error: function(xhr){
@@ -196,7 +195,7 @@ $(function () {
 
     function renderCollection(data) {
         var item;
-        var listCollection = data.actions.POST.collection.choices;
+        var listCollection = data.actions.POST.collection_id.choices;
 
         $('#cardCollectionList > option').remove();
 
@@ -208,6 +207,34 @@ $(function () {
 
     }
 
+
+    function getStatus() {
+            $.ajax({
+            type: "OPTIONS",
+            url: "/manage/card/",
+            contentType: "application/json",
+            cache: false,
+            success: function(data){
+                renderStatus(data);
+            },
+            error: function(xhr){
+                console.log(xhr);
+            }
+        });
+    }
+
+    function renderStatus(data) {
+        var item;
+        var listStatus = data.actions.POST.status_id.choices;
+
+        $('#cardStatusList > option').remove();
+
+        for(item = 0; item < listStatus.length; item++) {
+            row = '<option value="' + listStatus[item].display_name + '" id="' + listStatus[item].value + '">';
+
+            $('#cardStatusList').append(row);
+        }
+    }
 
     // Login
 	$('#btnSignIn').click(function () {
@@ -358,30 +385,35 @@ $(function () {
 
 	function saveChangesCard() {
 
-        var selected_id = getIdByName($("#cardCollection").val(), $("#cardCollectionList"))
+        var collectionId = getIdByName($("#cardCollection").val(), $("#cardCollection")),
+            statusId = getIdByName($('#cardStatus').val, $('#cardStatus')),
+            assignedToId = getIdByName($('#cardAssignedTo').val, $('#cardAssignedTo')),
+            description = $('#cardDescription').val();
 
-	    alert('Choised val: ' + $("#cardCollection").val() +'/r/n'+ 'Choised_ID: ' + selected_id);
+//	    alert('Choised val: ' + $("#cardCollection").val() +'/r/n'+ 'Choised_ID: ' + selected_id);
 
 	    var url = decodeURI(window.location.hash),
 	        cardId = url.split('#card/')[1].trim();
 
-//        $.ajax({
-//            type: "PATCH",
-//            url: "/manage/card/" + cardId + "/",
-//            data: JSON.stringify({
-//                "name": name,
+        $.ajax({
+            type: "PATCH",
+            url: "/manage/card/" + cardId + "/",
+            data: JSON.stringify({
+                "status_id": statusId,
+                "collection_id": collectionId,
+                "assigned_to_id": assignedToId
 //                "description": description
-//            }),
-//            contentType: "application/json",
-//            cache: false,
-//            async: false,
-//            success: function(data){
-//                window.location.hash = '#';
-//            },
-//            error: function(xhr){
-//                $('#collectionErr').html(xhr.responseText);
-//            }
-//        });
+            }),
+            contentType: "application/json",
+            cache: false,
+            async: false,
+            success: function(data){
+                window.location.hash = '#';
+            },
+            error: function(xhr){
+                $('#collectionErr').html(xhr.responseText);
+            }
+        });
 	}
 
 	function getIdByName(val, searchList) {
@@ -938,6 +970,7 @@ $("input[name='Typelist']").on('input', function(e){
 
         getAssignedTo();
         getCollection();
+        getStatus();
 
         $('#btnSaveNewCard').unbind('click');
 
@@ -966,6 +999,7 @@ $("input[name='Typelist']").on('input', function(e){
                         $('#cardDescription').val(item.description);
 
                         $('#btnSaveNewCard').on('click', saveChangesCard);
+                        $('#cardStatus').prop("readonly", false);
                         $('#cardTitle').show();
                         $('#inputTitle').hide();
                     }
@@ -1098,7 +1132,7 @@ $("input[name='Typelist']").on('input', function(e){
 
 	// SRFToken !!!
 	function csrfSafeMethod(method) {
-        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        return (/^(GET|HEAD|OPTIONS|PATCH|TRACE)$/.test(method));
     }
 
     $.ajaxSetup({
