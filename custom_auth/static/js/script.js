@@ -115,6 +115,39 @@ $(function () {
     }
 
 
+    function getAvailableCards() {
+        $.ajax({
+            type: "GET",
+            url: "/manage/card/?available",
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("Authorization", localStorage.getItem('UserToken'));
+            },
+            contentType: "application/json",
+            cache: false,
+            success: function(data){
+                renderAvailableCards(data);
+            },
+            error: function(xhr){
+                console.log(xhr);
+            }
+        });
+
+    }
+
+    function renderAvailableCards(data) {
+        var item;
+
+        $('#availableCardsList > option').remove();
+
+        for(item = 0; item < data.length; item++) {
+            row = '<option value="' + data[item].title + '" data-value="' + data[item].title + '">';
+
+            $('#assignedToList').append(row);
+        }
+
+    }
+
+
     function getAssignedTo() {
         $.ajax({
             type: "OPTIONS",
@@ -221,9 +254,20 @@ $(function () {
         window.location.hash = '#card/new';
 	});
 
-    // New Card
+    // New Collection
 	$('#btnNewCollection').click(function () {
         window.location.hash = '#collection/new';
+	});
+
+	// Add card into collection
+	$('#btnAddCard').click(function () {
+	    var col_hash = '#collection/',
+	        index = decodeURI(window.location.hash).split(col_hash)[1].split('/')[0];
+	    window.location.hash = col_hash + index + '/add_card';
+	});
+
+	$('btnAddCardIntoCollection').click(function () {
+	    // Write Code here !!!!
 	});
 
 	$('#mycollections').on('click', function () {
@@ -605,6 +649,9 @@ $(function () {
                 renderSignUpPage();
 			}
 
+
+
+
 		};
 
 		// Execute the needed function depending on the url keyword (stored in temp).
@@ -699,20 +746,61 @@ $(function () {
 
 
     function renderSingleCollectionPage(index, collections) {
-		// Do here
-		var page = $('.single-collection');
 
-		$('#btnSaveCollection').unbind('click');
+		var arr_param = index.split('/')
+		    arr_length = arr_param.length;
 
-		if (index == 'new') {
 
-			$('#btnSaveCollection').on('click', saveNewCollection);
+        if (arr_length == 1) {
 
-		} else {
-			//Do nothing
-		}
+        	if (arr_param[0] == 'new') {
 
-		// Show the page.
+                var page = $('.single-collection');
+
+                $('#btnSaveCollection').unbind('click');
+
+                $('#btnSaveCollection').on('click', saveNewCollection);
+
+                // Show the page.
+                page.addClass('visible');
+
+            } else {
+
+                $('#btnNewCard').hide();
+                $('#tableMyCards').hide();
+                $('#btnNewCollection').hide();
+                $('#tableMyCollections').hide();
+
+                $('#btnAddCard').show();
+                $('#tableCollectionCards').show();
+
+             }
+
+        } else if (arr_length == 2) {
+
+            if(arr_param[1] == 'add_card') {
+
+                //loading add card page
+                renderCollectionAddCard(arr_param[0]);
+
+            } else {
+                renderErrorPage();
+            }
+
+        } else {
+            renderErrorPage();
+        }
+
+	}
+
+
+	function renderCollectionAddCard(index){
+
+        var page = $('.collection-add-card');
+
+        getAvailableCards()
+//        $('#availableCards').val(index);
+
 		page.addClass('visible');
 
 	}
