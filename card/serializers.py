@@ -32,7 +32,7 @@ class RoleSerializer(serializers.ModelSerializer):
 class CardSerializer(serializers.ModelSerializer):
     assigned_to = UserLiteSerializer(read_only=True, allow_null=True)
     owner = UserLiteSerializer(read_only=True)
-    status = StatusSerializer(read_only=True, allow_null=True)
+    status = StatusSerializer(allow_null=True)
     role = RoleSerializer(read_only=True, many=True)
 
     class Meta:

@@ -276,7 +276,22 @@ $(function () {
 	});
 
 	$('btnAddCardIntoCollection').click(function () {
-	    // Write Code here !!!!
+        $.ajax({
+            type: "POST",
+            url: "/manage/card/",
+            data: JSON.stringify({
+                "collection": $("#collectionIdForAddCard").val();
+            }),
+            contentType: "application/json",
+            cache: false,
+            async: false,
+            success: function(data){
+                window.location.hash = '#collection/' + $("#collectionIdForAddCard").val();
+            },
+            error: function(xhr){
+                $('#cardErr').html(xhr.responseText);
+            }
+        });
 	});
 
 	$('#mycollections').on('click', function () {
@@ -836,6 +851,7 @@ $(function () {
 
         getAvailableCards()
 //        $('#availableCards').val(index);
+        $('#collectionIdForAddCard').val(index);
 
 		page.addClass('visible');
 

@@ -43,6 +43,9 @@ class CardViewSet(viewsets.ModelViewSet):
         if self.action == 'metadata':
             return CardCreateSerializer
 
+        if self.action == 'partial_update':
+            return CardCreateSerializer
+
         return self.serializer_class
 
 
