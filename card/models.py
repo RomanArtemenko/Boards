@@ -87,6 +87,5 @@ class Board(models.Model):
     collection = models.ForeignKey(
         Collection,
         on_delete=models.PROTECT,
-        blank=True,
-        null=True,
+        related_name='boards'
     )

@@ -1,8 +1,9 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from .models import Card, Status, Role, Collection
+from .models import Card, Status, Role, Collection, Board
 from .serializers import CardSerializer, RoleSerializer, \
-    StatusSerializer, CardCreateSerializer, CollectionSerializer
+    StatusSerializer, CardCreateSerializer, CollectionSerializer, \
+    BoardSerializer
 
 # Create your views here.
 
@@ -87,3 +88,11 @@ class CollectionViewSet(viewsets.mixins.CreateModelMixin,
         serializer.save(
             created_by=self.request.user
         )
+
+class BoardViewSet(viewsets.mixins.CreateModelMixin,
+                   viewsets.mixins.UpdateModelMixin,
+                   viewsets.mixins.RetrieveModelMixin,
+                   viewsets.GenericViewSet):
+    serializer_class = BoardSerializer
+    queryset = Board.objects.all()
+    permission_classes = (IsAuthenticated,)

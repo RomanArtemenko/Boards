@@ -236,6 +236,35 @@ $(function () {
         }
     }
 
+    function getBoardType() {
+        $.ajax({
+            type: "OPTIONS",
+            url: "/manage/board/",
+            contentType: "application/json",
+            cache: false,
+            success: function(data){
+                renderBoardType(data);
+            },
+            error: function(xhr){
+                console.log(xhr);
+            }
+        });
+    }
+
+
+    function renderBoardType(data) {
+        var item,
+            listBoardType = data.actions.POST.type.choices;
+
+        $('#boardTypeList > option').remove();
+
+        for(item = 0; item < listBoardType.length; item++) {
+            row = '<option value="' + listBoardType[item].display_name + '" id="' + listBoardType[item].value + '">';
+
+            $('#boardTypeList').append(row);
+        }
+    }
+
     // Login
 	$('#btnSignIn').click(function () {
 
@@ -325,15 +354,12 @@ $(function () {
 
 	// Add board into collection
 	$('#btnAddBoard').click(function () {
-//        window.location.hash = '#board/new';
-
         var col_hash = '#collection/',
 	        index = decodeURI(window.location.hash).split(col_hash)[1].split('/')[0];
 	    window.location.hash = col_hash + index + '/add_board';
-
 	});
 
-	$('btnAddCardIntoCollection').click(function () {
+	$('#btnAddCardIntoCollection').click(function () {
         $.ajax({
             type: "POST",
             url: "/manage/card/",
@@ -354,9 +380,29 @@ $(function () {
 
 	$('#btnAddBoardIntoCollection').click(function () {
 	    var boardName = $('#inputBoardName').val(),
-	        collectionId = $('#collectionIdForAddBoard').val();
+	        collectionId = $('#collectionIdForAddBoard').val(),
+            name = $('#inputBoardName').val(),
+            type = getIdByName($('#boardType').val(), $('#boardType'))
 
 	     alert("Board name : " + boardName + '/r/n' + "Collection ID : " + collectionId);
+	     $.ajax({
+            type: "POST",
+            url: "/manage/board/",
+            data: JSON.stringify({
+                "collection": collectionId,
+                "name": name,
+                "type": type
+            }),
+            contentType: "application/json",
+            cache: false,
+            async: false,
+            success: function(data){
+                window.location.hash = '#collection/' + $("#collectionIdForAddCard").val();
+            },
+            error: function(xhr){
+                $('#addBoardErr').html(xhr.responseText);
+            }
+        });
 
 
 	});
@@ -1046,16 +1092,20 @@ $("input[name='Typelist']").on('input', function(e){
 	}
 
 	function renderCollectionAddBoard(index) {
-
-	    var page = $('.collection-add-board');
+        getBoardType();
 
         $('#collectionIdForAddBoard').val(index);
 
-		page.addClass('visible');
+        var page = $('.collection-add-board');
+
+
+        page.addClass('visible');
 
 	}
 
     function renderSingleBoardPage(index) {
+
+//        getBoardType();
 
         if (index == 'new') {
 

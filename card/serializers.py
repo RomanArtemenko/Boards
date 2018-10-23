@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import ProgrammingError
 from rest_framework import serializers
-from .models import Card, Status, Role, Collection
+from .models import Card, Status, Role, Collection, Board
 from django.core.exceptions import EmptyResultSet
 from django.db.utils import OperationalError
 
@@ -47,8 +47,6 @@ class CardSerializer(serializers.ModelSerializer):
         model = Card
         fields = ('id', 'title', 'description', 'due_date',
                   'owner', 'status', 'role', 'created_date', 'assigned_to', 'collection')
-
-
 
 
 class ChoiceLoader():
@@ -109,11 +107,18 @@ class CardCreateSerializer(serializers.ModelSerializer):
                   'owner', 'status_id', 'role_id', 'collection_id')
 
 
-class CollectionSerializer(serializers.ModelSerializer):
+class BoardSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model = Board
+        fields = ('id', 'name', 'type', 'collection')
+
+
+class CollectionSerializer(serializers.ModelSerializer):
     created_by = UserLiteSerializer(read_only=True)
     cards = CardSerializer(read_only=True, many=True)
+    boards = BoardSerializer(read_only=True, many=True)
 
     class Meta:
         model = Collection
-        fields = ('id', 'name', 'description', 'created_by', 'cards')
+        fields = ('id', 'name', 'description', 'created_by', 'cards', 'boards')
