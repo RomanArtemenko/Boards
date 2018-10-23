@@ -71,3 +71,22 @@ class Card(models.Model):
         null=True,
         related_name='cards',
     )
+
+
+class Board(models.Model):
+    CHOICES_BOARD_TYPE = (
+        ('K', 'Kanban'),
+        ('S', 'Scrum'),
+    )
+
+    name = models.CharField(max_length=100)
+    type = models.CharField(
+        max_length=1,
+        choices=CHOICES_BOARD_TYPE,
+    )
+    collection = models.ForeignKey(
+        Collection,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+    )
