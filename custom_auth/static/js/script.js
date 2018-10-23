@@ -64,17 +64,17 @@ $(function () {
 
 
     function renderMyCards(data) {
-        var card;
+        var item;
 
         $('#tableMyCards > tbody > tr').remove();
 
-        for(card = 0; card < data.length; card++) {
+        for(item = 0; item < data.length; item++) {
             row = '<tr>'+
-                  '<th scope="row"><a href="/#card/' + data[card].id + '">' + data[card].id  + '</a></th>' +
-                  '<td>' + data[card].status.name + '</td>' +
-                  '<td>' + data[card].title + '</td>' +
-                  '<td>' + cardDate(data[card], 'created') + '</td>' +
-                  '<td>' + userName(data[card].assigned_to) + '</td>' +
+                  '<th scope="row"><a href="/#card/' + data[item].id + '">' + data[item].id  + '</a></th>' +
+                  '<td>' + data[item].status.name + '</td>' +
+                  '<td>' + data[item].title + '</td>' +
+                  '<td>' + cardDate(data[item], 'created') + '</td>' +
+                  '<td>' + userName(data[item].assigned_to) + '</td>' +
                   '</tr>';
 
             $('#tableMyCards > tbody:last-child').append(row);
@@ -101,14 +101,14 @@ $(function () {
 
 
     function renderMyCollections(data) {
-        var collection;
+        var item;
 
         $('#tableMyCollections > tbody > tr').remove();
 
-        for(collection = 0; collection < data.length; collection++) {
+        for(item = 0; item < data.length; item++) {
             row = '<tr>'+
-                  '<th scope="row"><a href="/#collection/' + data[collection].id + '">' + data[collection].id  + '</a></th>' +
-                  '<td>' + data[collection].name + '</td>'
+                  '<th scope="row"><a href="/#collection/' + data[item].id + '">' + data[item].id  + '</a></th>' +
+                  '<td>' + data[item].name + '</td>'
                   '</tr>';
 
             $('#tableMyCollections > tbody:last-child').append(row);
@@ -138,7 +138,7 @@ $(function () {
         $('#availableCardsList > option').remove();
 
         for(item = 0; item < data.length; item++) {
-            row = '<option value="' + data[item].title + '" data-value="' + data[item].title + '">';
+            row = '<option value="' + data[item].title + '"id="' + data[item].value + '">';
 
             $('#assignedToList').append(row);
         }
@@ -169,7 +169,7 @@ $(function () {
         $('#assignedToList > option').remove();
 
         for(item = 0; item < listAssignedTo.length; item++) {
-            row = '<option value="' + listAssignedTo[item].display_name + '" data-value="' + listAssignedTo[item].value + '">';
+            row = '<option value="' + listAssignedTo[item].display_name + '" id="' + listAssignedTo[item].value + '">';
 
             $('#assignedToList').append(row);
         }
@@ -386,8 +386,8 @@ $(function () {
 	function saveChangesCard() {
 
         var collectionId = getIdByName($("#cardCollection").val(), $("#cardCollection")),
-            statusId = getIdByName($('#cardStatus').val, $('#cardStatus')),
-            assignedToId = getIdByName($('#cardAssignedTo').val, $('#cardAssignedTo')),
+            statusId = getIdByName($('#cardStatus').val(), $('#cardStatus')),
+            assignedToId = getIdByName($('#cardAssignedTo').val(), $('#cardAssignedTo')),
             description = $('#cardDescription').val();
 
 //	    alert('Choised val: ' + $("#cardCollection").val() +'/r/n'+ 'Choised_ID: ' + selected_id);
@@ -401,13 +401,14 @@ $(function () {
             data: JSON.stringify({
                 "status_id": statusId,
                 "collection_id": collectionId,
-                "assigned_to_id": assignedToId
-//                "description": description
+                "assigned_to_id": assignedToId,
+                "description": description
             }),
             contentType: "application/json",
             cache: false,
             async: false,
             success: function(data){
+                getMyCards();
                 window.location.hash = '#';
             },
             error: function(xhr){
@@ -470,6 +471,7 @@ $("input[name='Typelist']").on('input', function(e){
             cache: false,
             async: false,
             success: function(data){
+                getMyCards();
                 window.location.hash = '#';
             },
             error: function(xhr){
@@ -974,6 +976,12 @@ $("input[name='Typelist']").on('input', function(e){
 
         $('#btnSaveNewCard').unbind('click');
 
+        $('#cardStatus').val('');
+        $('#cardDescription').val('');
+        $('#cardCollection').val('');
+        $('#cardAssignedTo').val('');
+
+
         if (index == 'new') {
             $('#cardTitle').hide()
             $('#inputTitle').show()
@@ -989,13 +997,14 @@ $("input[name='Typelist']").on('input', function(e){
         } else {
 
             if(myCards.length){
-                myCards.forEach(function (item) {
+                myCards.forEach(function(item) {
                     if(item.id == index){
                         $('#cardTitle').html('#' + item.id + ' ' + item.title);
                         $('#cardOwner').val(userName(item.owner));
                         $('#cardStatus').val(item.status.name);
                         $('#cardCreatedDate').val(cardDate(item,'created'));
-//                        $('#cardAssignedTo').val(assignedUser(userName(item.assigned_to_repr)));
+                        $('#cardAssignedTo').val(assignedUser(userName(item.assigned_to)));
+                        $('#cardCollection').val(collectionName(item.collection));
                         $('#cardDescription').val(item.description);
 
                         $('#btnSaveNewCard').on('click', saveChangesCard);
@@ -1012,6 +1021,16 @@ $("input[name='Typelist']").on('input', function(e){
         // Show the page.
         page.addClass('visible');
 
+	}
+
+	function collectionName(data) {
+	    var res = '';
+
+	    if (data) {
+	        res = data.name
+	    }
+
+	    return res;
 	}
 
 
@@ -1132,7 +1151,7 @@ $("input[name='Typelist']").on('input', function(e){
 
 	// SRFToken !!!
 	function csrfSafeMethod(method) {
-        return (/^(GET|HEAD|OPTIONS|PATCH|TRACE)$/.test(method));
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
 
     $.ajaxSetup({

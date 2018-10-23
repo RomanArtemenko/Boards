@@ -29,16 +29,24 @@ class RoleSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
+class CollectionLightSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Collection
+        fields = ('id', 'name')
+
+
 class CardSerializer(serializers.ModelSerializer):
     assigned_to = UserLiteSerializer(read_only=True, allow_null=True)
     owner = UserLiteSerializer(read_only=True)
     status = StatusSerializer(allow_null=True)
-    role = RoleSerializer(read_only=True, many=True, allow_null=True)
+    role = RoleSerializer(many=True, allow_null=True)
+    collection = CollectionLightSerializer(allow_null=True)
 
     class Meta:
         model = Card
         fields = ('id', 'title', 'description', 'due_date',
-                  'owner', 'status', 'role', 'created_date', 'assigned_to')
+                  'owner', 'status', 'role', 'created_date', 'assigned_to', 'collection')
 
 
 
@@ -92,7 +100,8 @@ class CardCreateSerializer(serializers.ModelSerializer):
     collection_id = serializers.ChoiceField(choices=ChoiceLoader(
         Collection.objects.all(),
         ['id', 'name']
-    ).get_data())
+    ).get_data(),
+                                            allow_null=True)
 
     class Meta:
         model = Card
