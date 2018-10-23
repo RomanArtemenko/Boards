@@ -323,6 +323,16 @@ $(function () {
 	    window.location.hash = col_hash + index + '/add_card';
 	});
 
+	// Add board into collection
+	$('#btnAddBoard').click(function () {
+//        window.location.hash = '#board/new';
+
+        var col_hash = '#collection/',
+	        index = decodeURI(window.location.hash).split(col_hash)[1].split('/')[0];
+	    window.location.hash = col_hash + index + '/add_board';
+
+	});
+
 	$('btnAddCardIntoCollection').click(function () {
         $.ajax({
             type: "POST",
@@ -340,6 +350,15 @@ $(function () {
                 $('#cardErr').html(xhr.responseText);
             }
         });
+	});
+
+	$('#btnAddBoardIntoCollection').click(function () {
+	    var boardName = $('#inputBoardName').val(),
+	        collectionId = $('#collectionIdForAddBoard').val();
+
+	     alert("Board name : " + boardName + '/r/n' + "Collection ID : " + collectionId);
+
+
 	});
 
 	$('#mycollections').on('click', function () {
@@ -594,11 +613,54 @@ $("input[name='Typelist']").on('input', function(e){
 
 
 	// Collection page buttons
+
 	var singleCollection = $('.single-collection');
 
 	singleCollection.on('click', function (e) {
 
 		if (singleCollection.hasClass('visible')) {
+
+    		var clicked = $(e.target);
+
+			// If the close button or the background are clicked go to the previous page.
+			if (clicked.hasClass('close') || clicked.hasClass('overlay') || clicked.hasClass('btn-close')) {
+				// Change the url hash with the last used filters.
+				createQueryHash(filters);
+
+			}
+
+		}
+	});
+
+
+    //Adding Card into Collection page buttons
+
+	var addCardIntoCollectionPage = $('.collection-add-card');
+
+	addCardIntoCollectionPage.on('click', function (e) {
+
+	    if (addCardIntoCollectionPage.hasClass('visible')) {
+
+    		var clicked = $(e.target);
+
+			// If the close button or the background are clicked go to the previous page.
+			if (clicked.hasClass('close') || clicked.hasClass('overlay') || clicked.hasClass('btn-close')) {
+				// Change the url hash with the last used filters.
+				createQueryHash(filters);
+
+			}
+
+		}
+	});
+
+
+	//Single Board page buttons
+
+	var singleBoardPage = $('.collection-add-board');
+
+	singleBoardPage.on('click', function (e) {
+
+	    if (singleBoardPage.hasClass('visible')) {
 
     		var clicked = $(e.target);
 
@@ -769,6 +831,16 @@ $("input[name='Typelist']").on('input', function(e){
 
 			},
 
+			// Board
+			'#board': function() {
+
+			    var index = url.split('#board/')[1].trim();
+
+			    renderSingleBoardPage(index);
+
+			},
+
+
 			// Single Products page.
 			'#product': function() {
 
@@ -929,8 +1001,12 @@ $("input[name='Typelist']").on('input', function(e){
                 $('#btnNewCollection').hide();
                 $('#tableMyCollections').hide();
 
+                //render collection
+
                 $('#btnAddCard').show();
                 $('#tableCollectionCards').show();
+                $('#btnAddBoard').show();
+                $('#tableCollectionBoards').show();
 
              }
 
@@ -940,6 +1016,11 @@ $("input[name='Typelist']").on('input', function(e){
 
                 //loading add card page
                 renderCollectionAddCard(arr_param[0]);
+
+            } else if (arr_param[1] == 'add_board') {
+
+                //loading add board page
+                renderCollectionAddBoard(arr_param[0]);
 
             } else {
                 renderErrorPage();
@@ -963,6 +1044,32 @@ $("input[name='Typelist']").on('input', function(e){
 		page.addClass('visible');
 
 	}
+
+	function renderCollectionAddBoard(index) {
+
+	    var page = $('.collection-add-board');
+
+        $('#collectionIdForAddBoard').val(index);
+
+		page.addClass('visible');
+
+	}
+
+    function renderSingleBoardPage(index) {
+
+        if (index == 'new') {
+
+            var page = $('.collection-add-board');
+
+            page.addClass('visible');
+
+        } else {
+
+            aler('Here must be BOARD !!');
+
+        }
+
+    }
 
 
 	function renderSingleCardPage(index, data){
