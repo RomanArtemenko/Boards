@@ -11,6 +11,8 @@ $(function () {
     }
 
 
+
+
 	// Globals variables
 
 		// 	An array containing objects with information about the products.
@@ -35,14 +37,17 @@ $(function () {
 
 	//	Event handlers for frontend navigation
 
+	hideWorkElements();
+
 	//	Loading ny cards
 	$('#mycards').click(function () {
         getMyCards();
 
+        hideWorkElements();
+
         $('#btnNewCard').show();
         $('#tableMyCards').show();
-	    $('#btnNewCollection').hide();
-	    $('#tableMyCollections').hide();
+
 	});
 
 
@@ -384,7 +389,6 @@ $(function () {
             name = $('#inputBoardName').val(),
             type = getIdByName($('#boardType').val(), $('#boardType'))
 
-	     alert("Board name : " + boardName + '/r/n' + "Collection ID : " + collectionId);
 	     $.ajax({
             type: "POST",
             url: "/manage/board/",
@@ -410,8 +414,8 @@ $(function () {
 	$('#mycollections').on('click', function () {
 	    getMyCollections()
 
-        $('#btnNewCard').hide();
-        $('#tableMyCards').hide();
+        hideWorkElements();
+
 	    $('#btnNewCollection').show();
 	    $('#tableMyCollections').show();
 	});
@@ -454,8 +458,6 @@ $(function () {
             statusId = getIdByName($('#cardStatus').val(), $('#cardStatus')),
             assignedToId = getIdByName($('#cardAssignedTo').val(), $('#cardAssignedTo')),
             description = $('#cardDescription').val();
-
-//	    alert('Choised val: ' + $("#cardCollection").val() +'/r/n'+ 'Choised_ID: ' + selected_id);
 
 	    var url = decodeURI(window.location.hash),
 	        cardId = url.split('#card/')[1].trim();
@@ -719,6 +721,30 @@ $("input[name='Typelist']").on('input', function(e){
 
 		}
 	});
+
+	function hideWorkElements() {
+	    //Buttons
+	    $('#btnNewCard').hide();
+	    $('#btnNewCollection').hide();
+        $('#btnAddCard').hide();
+        $('#btnAddBoard').hide();
+        //Tables
+        $('#tableMyCards').hide();
+        $('#tableBoardCard').hide();
+        $('#tableCollectionBoards').hide();
+        $('#tableMyCollections').hide();
+        $('#tableCollectionCards').hide();
+	}
+
+	/*
+
+
+					tableBoardCard
+					tableCollectionBoards
+					tableCollectionCards
+					tableMyCollections
+
+	*/
 
 
 
@@ -1042,10 +1068,11 @@ $("input[name='Typelist']").on('input', function(e){
 
             } else {
 
-                $('#btnNewCard').hide();
-                $('#tableMyCards').hide();
-                $('#btnNewCollection').hide();
-                $('#tableMyCollections').hide();
+                hideWorkElements()
+//                $('#btnNewCard').hide();
+//                $('#tableMyCards').hide();
+//                $('#btnNewCollection').hide();
+//                $('#tableMyCollections').hide();
 
                 //render collection
 
@@ -1141,7 +1168,7 @@ $("input[name='Typelist']").on('input', function(e){
 
         if (index == 'new') {
             $('#cardTitle').hide()
-            $('#inputTitle').show()
+            $('#inputTitle').show();
 
 //            $('#cardTitle').html('New card');
             $('#cardOwner').val(userName(JSON.parse(localStorage.getItem('User'))));
@@ -1166,6 +1193,8 @@ $("input[name='Typelist']").on('input', function(e){
 
                         $('#btnSaveNewCard').on('click', saveChangesCard);
                         $('#cardStatus').prop("readonly", false);
+
+
                         $('#cardTitle').show();
                         $('#inputTitle').hide();
                     }
