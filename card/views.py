@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Card, Status, Role, Collection, Board
 from .serializers import CardSerializer, RoleSerializer, \
     StatusSerializer, CardCreateSerializer, CollectionSerializer, \
-    BoardSerializer
+    BoardSerializer, BoardCreateSerializer
 
 # Create your views here.
 
@@ -96,3 +96,9 @@ class BoardViewSet(viewsets.mixins.CreateModelMixin,
     serializer_class = BoardSerializer
     queryset = Board.objects.all()
     permission_classes = (IsAuthenticated,)
+
+    def get_serializer_class(self):
+        if self.action == 'partial_update':
+            return BoardCreateSerializer
+
+        return self.serializer_class

@@ -108,10 +108,27 @@ class CardCreateSerializer(serializers.ModelSerializer):
 
 
 class BoardSerializer(serializers.ModelSerializer):
+    card = CardSerializer(many=True, allow_null=True)
 
     class Meta:
         model = Board
-        fields = ('id', 'name', 'type', 'collection')
+        fields = ('id', 'name', 'type', 'collection', 'card')
+
+class BoardCreateSerializer(serializers.ModelSerializer):
+    card = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = Board
+        fields = ('id', 'name', 'type', 'collection', 'card')
+
+
+    def save(self, **kwargs):
+        cards = self.initial_data.pop('card', [])
+
+        for obj in Card.objects.filter(id__in=cards):
+            self.instance.card.add(obj)
+
+        return self.instance
 
 
 class CollectionSerializer(serializers.ModelSerializer):

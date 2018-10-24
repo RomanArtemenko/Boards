@@ -87,10 +87,11 @@ class Board(models.Model):
     collection = models.ForeignKey(
         Collection,
         on_delete=models.PROTECT,
-        related_name='boards'
+        related_name='boards',
+        blank = True,
+        null=True,
     )
     card = models.ManyToManyField(
         Card,
-        related_name='boards',
-        blank=True
+        related_name='boards'
     )
