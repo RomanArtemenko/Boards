@@ -89,3 +89,8 @@ class Board(models.Model):
         on_delete=models.PROTECT,
         related_name='boards'
     )
+    card = models.ManyToManyField(
+        Card,
+        related_name='boards',
+        blank=True
+    )
