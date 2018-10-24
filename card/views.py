@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_extensions.mixins import NestedViewSetMixin
 from .models import Card, Status, Role, Collection, Board
 from .serializers import CardSerializer, RoleSerializer, \
     StatusSerializer, CardCreateSerializer, CollectionSerializer, \
@@ -8,7 +9,8 @@ from .serializers import CardSerializer, RoleSerializer, \
 # Create your views here.
 
 
-class CardViewSet(viewsets.ModelViewSet):
+class CardViewSet(NestedViewSetMixin,
+                  viewsets.ModelViewSet):
     serializer_class = CardSerializer
     queryset = Card.objects.all()
     permission_classes = (IsAuthenticated,)
@@ -89,10 +91,23 @@ class CollectionViewSet(viewsets.mixins.CreateModelMixin,
             created_by=self.request.user
         )
 
-class BoardViewSet(viewsets.mixins.CreateModelMixin,
-                   viewsets.mixins.UpdateModelMixin,
-                   viewsets.mixins.RetrieveModelMixin,
-                   viewsets.GenericViewSet):
+# class BoardViewSet(NestedViewSetMixin,
+#                    viewsets.mixins.CreateModelMixin,
+#                    viewsets.mixins.UpdateModelMixin,
+#                    viewsets.mixins.RetrieveModelMixin,
+#                    viewsets.GenericViewSet):
+#     serializer_class = BoardSerializer
+#     queryset = Board.objects.all()
+#     permission_classes = (IsAuthenticated,)
+#
+#     def get_serializer_class(self):
+#         if self.action == 'partial_update':
+#             return BoardCreateSerializer
+#
+#         return self.serializer_class
+
+class BoardViewSet(NestedViewSetMixin,
+                   viewsets.ModelViewSet):
     serializer_class = BoardSerializer
     queryset = Board.objects.all()
     permission_classes = (IsAuthenticated,)
