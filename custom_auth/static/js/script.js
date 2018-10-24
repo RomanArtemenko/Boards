@@ -270,6 +270,55 @@ $(function () {
         }
     }
 
+    function getCurrentCollectionData(index) {
+        $.ajax({
+            type: "GET",
+            url: "/manage/collection/" + index + "/",
+            contentType: "application/json",
+            cache: false,
+            success: function(data){
+                renderCurrentCollectionData(data);
+            },
+            error: function(xhr){
+                console.log(xhr);
+            }
+        });
+    }
+
+    function renderCurrentCollectionData(data) {
+        console.log(data);
+        var boards = data.boards,
+            cards = data.cards,
+            item;
+
+
+        $('#tableCollectionCards > tbody > tr').remove();
+
+        for(item = 0; item < cards.length; item++) {
+            row = '<tr>'+
+                  '<th scope="row"><a href="/#card/' + cards[item].id + '">' + cards[item].id  + '</a></th>' +
+                  '<td>' + cards[item].title + '</td>' +
+                  '<td>' + userName(cards[item].assigned_to) + '</td>' +
+                  '<td>' + cards[item].status.name + '</td>' +
+                  '</tr>';
+
+            $('#tableCollectionCards > tbody:last-child').append(row);
+        }
+
+
+        $('#tableCollectionBoards > tbody > tr').remove();
+
+        for(item = 0; item < boards.length; item++) {
+            row = '<tr>'+
+                  '<th scope="row"><a href="/#board/' + boards[item].id + '">' + boards[item].id  + '</a></th>' +
+                  '<td>' + boards[item].name + '</td>'
+                  '</tr>';
+
+            $('#tableCollectionBoards > tbody:last-child').append(row);
+        }
+
+    }
+
     // Login
 	$('#btnSignIn').click(function () {
 
@@ -1075,7 +1124,9 @@ $("input[name='Typelist']").on('input', function(e){
 //                $('#tableMyCollections').hide();
 
                 //render collection
+                getCurrentCollectionData(arr_param[0]);
 
+                $('#filters').show();
                 $('#btnAddCard').show();
                 $('#tableCollectionCards').show();
                 $('#btnAddBoard').show();
