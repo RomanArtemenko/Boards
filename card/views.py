@@ -9,8 +9,7 @@ from .serializers import CardSerializer, RoleSerializer, \
 # Create your views here.
 
 
-class CardViewSet(NestedViewSetMixin,
-                  viewsets.ModelViewSet):
+class CardViewSet(viewsets.ModelViewSet):
     serializer_class = CardSerializer
     queryset = Card.objects.all()
     permission_classes = (IsAuthenticated,)
@@ -52,6 +51,13 @@ class CardViewSet(NestedViewSetMixin,
         return self.serializer_class
 
 
+class CardNestedViewSet(NestedViewSetMixin, CardViewSet):
+
+    def perform_destroy(self, instance):
+        board_id = list(self.get_parents_query_dict().values())[0]
+        instance.boards.remove(board_id)
+
+
 class RoleViewSet(viewsets.mixins.CreateModelMixin,
                   viewsets.mixins.ListModelMixin,
                   viewsets.mixins.RetrieveModelMixin,
@@ -91,23 +97,12 @@ class CollectionViewSet(viewsets.mixins.CreateModelMixin,
             created_by=self.request.user
         )
 
-# class BoardViewSet(NestedViewSetMixin,
-#                    viewsets.mixins.CreateModelMixin,
-#                    viewsets.mixins.UpdateModelMixin,
-#                    viewsets.mixins.RetrieveModelMixin,
-#                    viewsets.GenericViewSet):
-#     serializer_class = BoardSerializer
-#     queryset = Board.objects.all()
-#     permission_classes = (IsAuthenticated,)
-#
-#     def get_serializer_class(self):
-#         if self.action == 'partial_update':
-#             return BoardCreateSerializer
-#
-#         return self.serializer_class
 
 class BoardViewSet(NestedViewSetMixin,
-                   viewsets.ModelViewSet):
+                   viewsets.mixins.CreateModelMixin,
+                   viewsets.mixins.UpdateModelMixin,
+                   viewsets.mixins.RetrieveModelMixin,
+                   viewsets.GenericViewSet):
     serializer_class = BoardSerializer
     queryset = Board.objects.all()
     permission_classes = (IsAuthenticated,)
