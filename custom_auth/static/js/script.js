@@ -319,6 +319,64 @@ $(function () {
 
     }
 
+
+    function getBoardView(index) {
+        $.ajax({
+            type: "GET",
+            url: "/manage/boards/" + index + "/cards/",
+            contentType: "application/json",
+            cache: false,
+            success: function(data){
+                renderBoardView(data);
+            },
+            error: function(xhr){
+                console.log(xhr);
+            }
+        });
+    }
+
+    function renderBoardView(data) {
+        var index;
+
+        clearBoard();
+
+        for(index = 0; index < data.length; index++) {
+
+            if (data[index].status.id == 1) {
+                $('#colNew').append(ceateBoardItem(data[index]));
+            } else if (data[index].status.id == 2) {
+                $('#colReady').append(ceateBoardItem(data[index]));
+            } else if (data[index].status.id == 3) {
+                $('#colInProgress').append(ceateBoardItem(data[index]));
+            } else if (data[index].status.id == 4) {
+                $('#colReadyForTest').append(ceateBoardItem(data[index]));
+            } else if (data[index].status.id == 5) {
+                $('#colDone').append(ceateBoardItem(data[index]));
+            } else if (data[index].status.id == 6) {
+                $('#colArchived').append(ceateBoardItem(data[index]));
+            } else {
+                console.log('WTF : ' + data[index])
+            }
+
+        }
+
+    }
+
+    function clearBoard() {
+        $('div.board-item').remove();
+    }
+
+    function ceateBoardItem(card) {
+        var html = '';
+
+        html = 	'<div card_id="' + card.id + '" class="card p-2 bg-faded board-item">' +
+                '<h6 class="card-title">' + card.title + '</h6>' +
+//											<!--<p>With supporting text below as a natural lead-in to additional content.</p>-->
+                '</div>';
+
+        return html;
+    }
+
     // Login
 	$('#btnSignIn').click(function () {
 
@@ -469,6 +527,12 @@ $(function () {
 	    $('#tableMyCollections').show();
 	});
 
+	$('#btnOnBoard').on('click', function () {
+        var board_hash = '#board/',
+	        index = decodeURI(window.location.hash).split(board_hash)[1].split('/')[0];
+	    window.location.hash = board_hash + index + '/add_card';
+	});
+
     // Save Card
 //	$('#btnSaveNewCard').click();
 
@@ -561,7 +625,6 @@ $("input[name='Typelist']").on('input', function(e){
        match = $('#'+list + ' option').filter(function() {
            return ($(this).val() === val);
        });
-
     if(match.length > 0) {
         // value is in list
     } else {
@@ -777,24 +840,15 @@ $("input[name='Typelist']").on('input', function(e){
 	    $('#btnNewCollection').hide();
         $('#btnAddCard').hide();
         $('#btnAddBoard').hide();
+        $('#btnOnBoard').hide();
         //Tables
         $('#tableMyCards').hide();
         $('#tableBoardCard').hide();
         $('#tableCollectionBoards').hide();
         $('#tableMyCollections').hide();
         $('#tableCollectionCards').hide();
+        $('#board').hide();
 	}
-
-	/*
-
-
-					tableBoardCard
-					tableCollectionBoards
-					tableCollectionCards
-					tableMyCollections
-
-	*/
-
 
 
 	// These are called on page load
@@ -1118,13 +1172,14 @@ $("input[name='Typelist']").on('input', function(e){
             } else {
 
                 hideWorkElements()
-//                $('#btnNewCard').hide();
-//                $('#tableMyCards').hide();
-//                $('#btnNewCollection').hide();
-//                $('#tableMyCollections').hide();
 
                 //render collection
                 getCurrentCollectionData(arr_param[0]);
+
+                var page = $('.all-products');
+
+                page.addClass('visible');
+
 
                 $('#filters').show();
                 $('#btnAddCard').show();
@@ -1181,21 +1236,62 @@ $("input[name='Typelist']").on('input', function(e){
 
 	}
 
+	function renderBoardAddCard(index) {
+	    //load available cards
+        $('#boardIdForOnBoard').val(index);
+
+        var page = $('.board-add-card');
+
+
+        page.addClass('visible');
+	}
+
     function renderSingleBoardPage(index) {
 
+        var arr_param = index.split('/')
+                arr_length = arr_param.length;
+
 //        getBoardType();
+        if (arr_param.length == 1) {
 
-        if (index == 'new') {
+            if (index == 'new') {
 
-            var page = $('.collection-add-board');
+                var page = $('.collection-add-board');
 
-            page.addClass('visible');
+                page.addClass('visible');
+
+            } else {
+
+                hideWorkElements();
+
+                getBoardView(arr_param[0]);
+
+                var page = $('.all-products');
+
+                page.addClass('visible');
+
+                $('#board').show();
+                $('#btnOnBoard').show();
+
+            }
+
+        } else if (arr_param.length == 2) {
+
+            if(arr_param[1] == 'add_card') {
+
+                //loading add card page
+//                renderCollectionAddCard(arr_param[0]);
+                  renderBoardAddCard(arr_param[0]);
+
+            } else {
+                renderErrorPage();
+            }
 
         } else {
-
-            aler('Here must be BOARD !!');
-
+            renderErrorPage();
         }
+
+
 
     }
 
@@ -1401,4 +1497,83 @@ $("input[name='Typelist']").on('input', function(e){
         }
     });
 
+
+// for list card
+
+   $('.list-group.checked-list-box .list-group-item').each(function () {
+
+        // Settings
+        var $widget = $(this),
+            $checkbox = $('<input type="checkbox" class="hidden" />'),
+            color = ($widget.data('color') ? $widget.data('color') : "primary"),
+            style = ($widget.data('style') == "button" ? "btn-" : "list-group-item-"),
+            settings = {
+                on: {
+                    icon: 'glyphicon glyphicon-check'
+                },
+                off: {
+                    icon: 'glyphicon glyphicon-unchecked'
+                }
+            };
+
+        $widget.css('cursor', 'pointer')
+        $widget.append($checkbox);
+
+        // Event Handlers
+        $widget.on('click', function () {
+            $checkbox.prop('checked', !$checkbox.is(':checked'));
+            $checkbox.triggerHandler('change');
+            updateDisplay();
+        });
+        $checkbox.on('change', function () {
+            updateDisplay();
+        });
+
+
+        // Actions
+        function updateDisplay() {
+            var isChecked = $checkbox.is(':checked');
+
+            // Set the button's state
+            $widget.data('state', (isChecked) ? "on" : "off");
+
+            // Set the button's icon
+            $widget.find('.state-icon')
+                .removeClass()
+                .addClass('state-icon ' + settings[$widget.data('state')].icon);
+
+            // Update the button's color
+            if (isChecked) {
+                $widget.addClass(style + color + ' active');
+            } else {
+                $widget.removeClass(style + color + ' active');
+            }
+        }
+
+        // Initialization
+        function init() {
+
+            if ($widget.data('checked') == true) {
+                $checkbox.prop('checked', !$checkbox.is(':checked'));
+            }
+
+            updateDisplay();
+
+            // Inject the icon if applicable
+            if ($widget.find('.state-icon').length == 0) {
+                $widget.prepend('<span class="state-icon ' + settings[$widget.data('state')].icon + '"></span>');
+            }
+        }
+        init();
+    });
+
+    $('#get-checked-data').on('click', function(event) {
+        event.preventDefault();
+        var checkedItems = {}, counter = 0;
+        $("#check-list-box li.active").each(function(idx, li) {
+            checkedItems[counter] = $(li).text();
+            counter++;
+        });
+        $('#display-json').html(JSON.stringify(checkedItems, null, '\t'));
+    });
 });

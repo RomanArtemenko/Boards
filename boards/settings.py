@@ -128,6 +128,7 @@ INSTALLED_APPS = [
     'rest_social_auth',
     'card',
     'django.contrib.sites',
+    'rest_framework_extensions',
 
 ]
 
