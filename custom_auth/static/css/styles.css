@@ -1,7 +1,6 @@
 * {
 	margin:0;
 	padding:0;
-	border-radius: 0 !important;
 }
 
 body{
@@ -489,6 +488,57 @@ header h2.tzine a{
 }
 
 
+/*----------------------
+    Board add card
+-----------------------*/
+
+.board-add-card{
+	z-index: 100;
+}
+
+.board-add-card{
+	height: 20px;
+	width: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background-color: #282b2c;
+	transition: 0.6s;
+	z-index: 100;
+}
+
+.board-add-card.visible .overlay{
+	height: 100%;
+}
+
+.preview-large{
+	box-sizing: border-box;
+	width: 760px;
+	height: 550px;
+	position: fixed;
+	left: 50%;
+	margin-left: -375px;
+	top: 50%;
+	margin-top: -275px;
+	pointer-events: none;
+
+	border-radius: 6px;
+	background-color:  #ffffff;
+
+	z-index: 102;
+	opacity: 0;
+	transition: 0.4s;
+
+}
+
+.board-add-card.visible .preview-large{
+	opacity: 1;
+	transition: 1.4s;
+	pointer-events: auto;
+}
+
+
+
 /*---------------------------
 	Single Card Page
 ----------------------------*/
@@ -860,4 +910,20 @@ ul, #myUL {
 /* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
 .active {
   display: block;
+}
+
+/*---------------------------------
+for list cards
+---------------------------------*/
+.state-icon {
+    left: -5px;
+}
+.list-group-item-primary {
+    color: rgb(255, 255, 255);
+    background-color: rgb(66, 139, 202);
+}
+
+/* DEMO ONLY - REMOVES UNWANTED MARGIN */
+.well .list-group {
+    margin-bottom: 0px;
 }
