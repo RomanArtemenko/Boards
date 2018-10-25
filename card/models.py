@@ -88,10 +88,10 @@ class Board(models.Model):
         Collection,
         on_delete=models.PROTECT,
         related_name='boards',
-        blank = True,
+        blank=True,
         null=True,
     )
     card = models.ManyToManyField(
-        Card,
+        'Card',
         related_name='boards'
     )

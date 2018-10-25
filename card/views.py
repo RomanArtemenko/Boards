@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_extensions.mixins import NestedViewSetMixin
 from .models import Card, Status, Role, Collection, Board
 from .serializers import CardSerializer, RoleSerializer, \
     StatusSerializer, CardCreateSerializer, CollectionSerializer, \
@@ -50,6 +51,13 @@ class CardViewSet(viewsets.ModelViewSet):
         return self.serializer_class
 
 
+class CardNestedViewSet(NestedViewSetMixin, CardViewSet):
+
+    def perform_destroy(self, instance):
+        board_id = list(self.get_parents_query_dict().values())[0]
+        instance.boards.remove(board_id)
+
+
 class RoleViewSet(viewsets.mixins.CreateModelMixin,
                   viewsets.mixins.ListModelMixin,
                   viewsets.mixins.RetrieveModelMixin,
@@ -89,7 +97,9 @@ class CollectionViewSet(viewsets.mixins.CreateModelMixin,
             created_by=self.request.user
         )
 
-class BoardViewSet(viewsets.mixins.CreateModelMixin,
+
+class BoardViewSet(NestedViewSetMixin,
+                   viewsets.mixins.CreateModelMixin,
                    viewsets.mixins.UpdateModelMixin,
                    viewsets.mixins.RetrieveModelMixin,
                    viewsets.GenericViewSet):
