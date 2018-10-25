@@ -1,6 +1,7 @@
 * {
 	margin:0;
 	padding:0;
+	border-radius: 0 !important;
 }
 
 body{
@@ -10,6 +11,8 @@ body{
 h1, h3{
 	font: normal 24px 'Open Sans', Arial, Helvetica, sans-serif;
 }
+
+
 
 /*-----------------
 	The Header
@@ -76,6 +79,9 @@ header h2.tzine a{
 	Main Content
 ------------------*/
 
+.head{
+    background-color:#c4c4c4;
+}
 
 .main-content{
 	box-sizing: border-box;

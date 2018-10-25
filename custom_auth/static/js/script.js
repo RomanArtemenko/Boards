@@ -728,12 +728,14 @@ $("input[name='Typelist']").on('input', function(e){
 	    $('#btnNewCollection').hide();
         $('#btnAddCard').hide();
         $('#btnAddBoard').hide();
+        $('#btnOnBoard').hide();
         //Tables
         $('#tableMyCards').hide();
         $('#tableBoardCard').hide();
         $('#tableCollectionBoards').hide();
         $('#tableMyCollections').hide();
         $('#tableCollectionCards').hide();
+        $('#board').hide();
 	}
 
 	/*
