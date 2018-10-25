@@ -39,6 +39,12 @@ class CardViewSet(viewsets.ModelViewSet):
         if 'me' in self.request.query_params.keys():
             return self.queryset.filter(owner=self.request.user)
 
+        if 'board' in self.request.query_params.keys():
+            board_id = self.request.query_params.get('board', 0)
+            collection_id = Board.objects.get(id=board_id).collection_id
+
+            return self.queryset.filter(collection_id=collection_id).exclude(boards=board_id)
+
         return self.queryset
 
     def get_serializer_class(self):

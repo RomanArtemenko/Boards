@@ -286,7 +286,6 @@ $(function () {
     }
 
     function renderCurrentCollectionData(data) {
-        console.log(data);
         var boards = data.boards,
             cards = data.cards,
             item;
@@ -374,6 +373,50 @@ $(function () {
                 '</div>';
 
         return html;
+    }
+
+
+    function getAvailableForBoardCards(index) {
+        $.ajax({
+            type: "GET",
+            url: "/manage/card/?board=" + index,
+            contentType: "application/json",
+            cache: false,
+            success: function(data){
+                console.log(data);
+                renderAvailableForBoardCards(data);
+            },
+            error: function(xhr){
+                console.log(xhr);
+            }
+        });
+    }
+
+    function renderAvailableForBoardCards(data) {
+        // write code hire
+        var index;
+
+        $('#listCardOnBoard').find('li').remove();
+
+        for(index = 0; index < data.length; index++) {
+            row  = '<li id="' + data[index].id + '" class="list-group-item">' + data[index].title + '</li>'
+
+            $('#listCardOnBoard').append(row);
+        }
+
+       setHendler();
+    }
+
+    function getSelectedCards() {
+        var cards = [];
+
+        var selected = $('#listCardOnBoard > li.active');
+
+        for(var i = 0; i < selected.length; i++) {
+            cards.push($(selected[i]).attr('id')) ;
+        }
+
+        return cards;
     }
 
     // Login
@@ -532,6 +575,35 @@ $(function () {
 	    window.location.hash = board_hash + index + '/add_card';
 	});
 
+
+    $('#btnAddOnBoard').on('click', function () {
+        var res = getSelectedCards();
+
+        if (res.length) {
+
+            $.ajax({
+                type: "PATCH",
+                url: "/manage/card/" + cardId + "/",
+                data: JSON.stringify({
+                    "status_id": statusId,
+                    "collection_id": collectionId,
+                    "assigned_to_id": assignedToId,
+                    "description": description
+                }),
+                contentType: "application/json",
+                cache: false,
+                async: false,
+                success: function(data){
+                    getMyCards();
+                    window.location.hash = '#';
+                },
+                error: function(xhr){
+                    $('#collectionErr').html(xhr.responseText);
+                }
+            });
+
+        }
+    });
     // Save Card
 //	$('#btnSaveNewCard').click();
 
@@ -820,6 +892,25 @@ $("input[name='Typelist']").on('input', function(e){
 	singleBoardPage.on('click', function (e) {
 
 	    if (singleBoardPage.hasClass('visible')) {
+
+    		var clicked = $(e.target);
+
+			// If the close button or the background are clicked go to the previous page.
+			if (clicked.hasClass('close') || clicked.hasClass('overlay') || clicked.hasClass('btn-close')) {
+				// Change the url hash with the last used filters.
+				createQueryHash(filters);
+
+			}
+
+		}
+	});
+
+
+	var boardAddCardPage =  $('.board-add-card');
+
+	boardAddCardPage.on('click', function (e) {
+
+	    if (boardAddCardPage.hasClass('visible')) {
 
     		var clicked = $(e.target);
 
@@ -1246,6 +1337,8 @@ $("input[name='Typelist']").on('input', function(e){
 	    //load available cards
         $('#boardIdForOnBoard').val(index);
 
+        getAvailableForBoardCards(index);
+
         var page = $('.board-add-card');
 
 
@@ -1505,7 +1598,7 @@ $("input[name='Typelist']").on('input', function(e){
 
 
 // for list card
-
+ function setHendler() {
    $('.list-group.checked-list-box .list-group-item').each(function () {
 
         // Settings
@@ -1582,4 +1675,5 @@ $("input[name='Typelist']").on('input', function(e){
         });
         $('#display-json').html(JSON.stringify(checkedItems, null, '\t'));
     });
+   }
 });
