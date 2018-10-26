@@ -46,7 +46,8 @@ class CardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
         fields = ('id', 'title', 'description', 'due_date',
-                  'owner', 'status', 'role', 'created_date', 'assigned_to', 'collection')
+                  'owner', 'status', 'role', 'created_date',
+                  'assigned_to', 'collection')
 
 
 class ChoiceLoader():
@@ -68,7 +69,8 @@ class ChoiceLoader():
                 [getattr(item, method)() for method in methods]
                 for item in queryset
             ]
-        except (AttributeError, EmptyResultSet, OperationalError, ProgrammingError):
+        except (AttributeError, EmptyResultSet,
+                OperationalError, ProgrammingError):
             self._data = []
 
         if empty_line is not None:

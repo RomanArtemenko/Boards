@@ -89,6 +89,7 @@ class CollectionViewSet(viewsets.mixins.CreateModelMixin,
             created_by=self.request.user
         )
 
+
 class BoardViewSet(viewsets.mixins.CreateModelMixin,
                    viewsets.mixins.UpdateModelMixin,
                    viewsets.mixins.RetrieveModelMixin,
