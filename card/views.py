@@ -117,4 +117,7 @@ class BoardViewSet(NestedViewSetMixin,
         if self.action == 'partial_update':
             return BoardCreateSerializer
 
+        if self.action == 'create':
+            return BoardCreateSerializer
+
         return self.serializer_class

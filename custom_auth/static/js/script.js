@@ -533,8 +533,7 @@ $(function () {
 	});
 
 	$('#btnAddBoardIntoCollection').click(function () {
-	    var boardName = $('#inputBoardName').val(),
-	        collectionId = $('#collectionIdForAddBoard').val(),
+	    var collectionId = $('#collectionIdForAddBoard').val(),
             name = $('#inputBoardName').val(),
             type = getIdByName($('#boardType').val(), $('#boardType'))
 
@@ -577,25 +576,23 @@ $(function () {
 
 
     $('#btnAddOnBoard').on('click', function () {
-        var res = getSelectedCards();
+        var res = getSelectedCards(),
+            boardId = $('#boardIdForOnBoard').val();
 
         if (res.length) {
 
             $.ajax({
                 type: "PATCH",
-                url: "/manage/card/" + cardId + "/",
+                url: "/manage/board/" + boardId + "/",
                 data: JSON.stringify({
-                    "status_id": statusId,
-                    "collection_id": collectionId,
-                    "assigned_to_id": assignedToId,
-                    "description": description
+                    "card": res
                 }),
                 contentType: "application/json",
                 cache: false,
                 async: false,
                 success: function(data){
-                    getMyCards();
-                    window.location.hash = '#';
+                    getBoardView(boardId);
+                    window.location.hash = '#board/' + boardId + '/';
                 },
                 error: function(xhr){
                     $('#collectionErr').html(xhr.responseText);
@@ -652,7 +649,7 @@ $(function () {
             data: JSON.stringify({
                 "status_id": statusId,
                 "collection_id": collectionId,
-                "assigned_to_id": assignedToId,
+                "assigned_to": assignedToId,
                 "description": description
             }),
             contentType: "application/json",

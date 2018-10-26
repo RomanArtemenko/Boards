@@ -118,7 +118,7 @@ class BoardSerializer(serializers.ModelSerializer):
 
 
 class BoardCreateSerializer(serializers.ModelSerializer):
-    card = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    card = serializers.PrimaryKeyRelatedField(many=True, read_only=True, allow_null=True)
 
     class Meta:
         model = Board
@@ -127,9 +127,11 @@ class BoardCreateSerializer(serializers.ModelSerializer):
     def save(self, **kwargs):
         cards = self.initial_data.pop('card', [])
 
-        for obj in Card.objects.filter(id__in=cards):
-            self.instance.card.add(obj)
+        super(BoardCreateSerializer, self).save(**kwargs)
 
+        if self.instance:
+            for obj in Card.objects.filter(id__in=cards):
+                self.instance.card.add(obj)
         return self.instance
 
 

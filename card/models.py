@@ -93,5 +93,6 @@ class Board(models.Model):
     )
     card = models.ManyToManyField(
         'Card',
-        related_name='boards'
+        related_name='boards',
+        blank=True,
     )
