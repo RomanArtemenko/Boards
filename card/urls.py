@@ -22,3 +22,4 @@ ext_router.register('boards', views.BoardViewSet, base_name='boards')\
 urlpatterns = [
     path('', include(router.urls)),
 ] + ext_router.urls
+
