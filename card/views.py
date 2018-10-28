@@ -5,6 +5,7 @@ from .models import Card, Status, Role, Collection, Board
 from .serializers import CardSerializer, RoleSerializer, \
     StatusSerializer, CardCreateSerializer, CollectionSerializer, \
     BoardSerializer, BoardCreateSerializer
+from .tasks import notify_performer
 
 # Create your views here.
 
@@ -27,9 +28,9 @@ class CardViewSet(viewsets.ModelViewSet):
 
         if new_assigned_to is not None:
             if old_instance.assigned_to != new_assigned_to:
-                pass
+                notify_performer.dalay('Roman')
 
-        if new_status is not None:
+        if new_status:
             if old_instance.status != new_status:
                 pass
 
