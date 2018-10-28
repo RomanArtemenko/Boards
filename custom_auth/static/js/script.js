@@ -419,8 +419,7 @@ $(function () {
         return cards;
     }
 
-=======
->>>>>>> 940f05a28cc59bb9229031f3b122a4268663e7a2
+
     // Login
 	$('#btnSignIn').click(function () {
 
