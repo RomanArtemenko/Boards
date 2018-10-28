@@ -419,6 +419,8 @@ $(function () {
         return cards;
     }
 
+=======
+>>>>>>> 940f05a28cc59bb9229031f3b122a4268663e7a2
     // Login
 	$('#btnSignIn').click(function () {
 
@@ -1274,6 +1276,7 @@ $("input[name='Typelist']").on('input', function(e){
                 var page = $('.all-products');
 
                 page.addClass('visible');
+
 
                 $('#filters').show();
                 $('#btnAddCard').show();

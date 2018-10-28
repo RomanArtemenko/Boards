@@ -114,6 +114,7 @@ class BoardViewSet(NestedViewSetMixin,
     queryset = Board.objects.all()
     permission_classes = (IsAuthenticated,)
 
+
     def get_serializer_class(self):
         if self.action == 'partial_update':
             return BoardCreateSerializer
